@@ -1,0 +1,52 @@
+%!TEX root = main.tex
+
+%math definitions
+\newcommand{\Real}{{\ensuremath{\mathbb{R}}}}
+\newcommand{\Nat}{\mathbb{N}\xspace}
+\newcommand{\Int}{\mathbb{Z}\xspace}
+\newcommand{\Rat}{\mathbb{Q}\xspace}
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\rng}{\mathrm{rng}}
+\newcommand{\restrict}{\upharpoonright}
+\newcommand{\idr}{\mathrm{Id}}
+\newcommand{\normal}[2]{\mathcal{N}(#1, #2)}
+\newcommand{\uniform}[2]{\mathcal{U}(#1, #2)}
+\newcommand{\charf}{1}
+\newcommand{\identity}{\mathrm{I}}
+\newcommand{\setdiff}{\bigtriangleup}
+\newcommand{\powerset}{\mathcal{P}}
+
+\newtheorem{theorem}{Theorem}
+
+
+\newcommand{\twopartdef}[4]
+{
+	\left\{
+		\begin{array}{ll}
+			#1 & \text{pro } #2 \\
+			#3 & \text{pro } #4
+		\end{array}
+	\right.
+}
+\newcommand{\twopartdefotherwise}[4]
+{
+	\left\{
+		\begin{array}{ll}
+			#1 & \text{pro } #2 \\
+			#3 & \text{jinak} #4
+		\end{array}
+	\right.
+}
+
+\newcommand{\informal}[1]{\smallskip\noindent\colorbox{SkyBlue}{\begin{minipage}{\textwidth-6pt}
+  \textbf{Informal! }#1
+\end{minipage}}\smallskip}
+
+% todos, comments, ...
+\newcommand{\pozn}[1]{\todo[inline,color={CornflowerBlue},size=\small]{\sc{#1}}}
+\newcommand{\missingref}{\todo[color={WildStrawberry}]{\textbf{Missing ref.}}}
+\newcommand{\add}[1]{\todo[inline, color={YellowGreen}]{#1}}
+\newcommand{\ask}[1]{\todo[inline, color={Peach}]{\textbf{???} #1}}
+\newcommand{\redo}[1]{\todo[inline, color={BurntOrange}]{\textbf{<!>} #1}}
+
+\newcommand{\code}[1]{\texttt{#1}}
