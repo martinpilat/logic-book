@@ -5,8 +5,7 @@
 \newcommand{\Nat}{\mathbb{N}\xspace}
 \newcommand{\Int}{\mathbb{Z}\xspace}
 \newcommand{\Rat}{\mathbb{Q}\xspace}
-\newcommand{\dom}{\mathrm{dom}}
-\newcommand{\rng}{\mathrm{rng}}
+\newcommand{\Prop}{\mathbb{P}\xspace}
 \newcommand{\restrict}{\upharpoonright}
 \newcommand{\idr}{\mathrm{Id}}
 \newcommand{\normal}[2]{\mathcal{N}(#1, #2)}
@@ -15,17 +14,29 @@
 \newcommand{\identity}{\mathrm{I}}
 \newcommand{\setdiff}{\bigtriangleup}
 \newcommand{\powerset}{\mathcal{P}}
+\newcommand{\lequiv}{\leftrightarrow}
+\newcommand{\fset}[2]{\tensor[^#1]{#2}{}}
+\newcommand{\Land}{\bigwedge}
+\newcommand{\Lor}{\bigvee}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\DeclareMathOperator{\Var}{var}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\rng}{rng}
+\DeclareMathOperator{\VF}{VF}
 
 
 \newcommand{\twopartdef}[4]
 {
 	\left\{
 		\begin{array}{ll}
-			#1 & \text{pro } #2 \\
-			#3 & \text{pro } #4
+			#1 & \text{for } #2 \\
+			#3 & \text{for } #4
 		\end{array}
 	\right.
 }
