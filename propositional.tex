@@ -216,3 +216,282 @@ While none of these algorithms can guarantee that they find the satisfying assig
 A complete algorithm (such that always finds the assignment, if it exists) can be implemented using backtracking and testing all possible assignments, however, such an algorithm is generally exponential. 
 
 The DPLL procedure implements such a backtracking with some improvements. It first removes all clauses that are tautologies, than if a clause becomes empty during the run of the algorithm, it indicates that the current partial assignment cannot satisfy the formula and the DPLL procedure fails. After these simple steps, the DPPL procedure simplifies the formula using unit propagation and so called \emph{pure literal elimination}\sidenote{if a literal $l$ is only positive or only negative in the formula, it can be assigned such value $v(l) = 1$ and all the clauses containing it can be removed}. If none of the previous step can be applied, the DPLL procedure uses a splitting rule -- it selects a literal and tries to call the DPLL procedure twice. Once for each possible truth assignment of that literal. If at least one of these calls succeeds, the formula is satisfiable.
+
+\chapter{Formal Proof Systems}
+
+Up to now, we mostly discussed the semantics of the propositional logic, and also defined many different terms semantically using the notion of truth assignments and models. We have defined a consequence of a theory as a formula that is true in all models of the theory. However, in mathematics, we usually do not check all possible models of a theory in order to tell whether a given formula is a consequence or not. Instead, we prove the formula from the axioms of the theory. 
+
+In this chapter, we will formalize the notion of proof as a syntactical method that can be used to prove formulas in propositional logic. The formalization will be called a proof system, and, informally, a proof system is a collection of syntactical rules that provide a proof of a given formula in a given theory. The proof is than a finite object that can be built from the axioms of the theory, and if a formula has a proof, it can be found algorithmically. 
+
+There are many different proof systems, among them is the tableau method we will describe in detail, and also the Hilbert systems and Gentzen systems. However, a proof system can only be useful, if any formula proved by the system is also valid, and vice versa, if every valid formula can be proven. These two features of a proof system are called soundness and completeness. 
+
+\section{Tableau Method}
+
+The tableau method is a proof system, where the proof (tableau) of a formula $\varphi$ in a theory $T$ is a binary labeled tree representing search for a model of $T$, where $\varphi$ is not true (a counterexample). If the search fails, the formula is proved and in such a case the tableau is finite. In case there is a counterexample of $\varphi$, the tableau can be infinite and there is a branch in the tree that provides the counterexample.
+
+In tableau methods, we assume a fixed and countable language $\Prop$, in this case, also every theory over $\Prop$ is countable.
+
+We already mentioned, that every tableau is a labeled binary tree. The nodes in the tree are labeled by \emph{entries}, which are formulas with a \emph{sign} $T$/$F$ that represent the assumption the formula is true ($T$) or false ($F$). The tree will be constructed using the \emph{atomic tableaux} and a set of rules. For a propositional variable $p$ and propositions $\varphi, \psi$, the atomic tableaux are given in the figure bellow.
+
+\begin{figure*}[ht]
+\centering
+\begin{minipage}{\textwidth}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$Tp$};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$Fp$};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$T (\varphi \land \psi)$}
+    child { node {$T \varphi$} 
+      child {node {$T \psi$}}};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$F (\varphi \land \psi)$}
+    child { node {$F \varphi$} }
+    child { node {$F \psi$}};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$T (\varphi \lor \psi)$}
+    child { node {$T \varphi$} }
+    child { node {$T \psi$}};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$F (\varphi \lor \psi)$}
+    child { node {$F \varphi$} 
+      child {node {$F \psi$}}};
+\end{tikzpicture} \\
+\hline
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$T (\neg \varphi)$}
+    child { node {$F \varphi$} };
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$F (\neg \varphi)$}
+    child { node {$T \varphi$} };
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=3em, level distance=3em]
+  \node {$T (\varphi \to \psi)$}
+    child { node {$F \varphi$} }
+    child { node {$T \psi$}};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=4em, level distance=3em]
+  \node {$F (\varphi \to \psi)$}
+    child { node {$T \varphi$} 
+      child {node {$F \psi$}}};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=4em, level distance=3em]
+  \node {$T (\varphi \lequiv \psi)$}
+    child { node {$T \varphi$} 
+    	child {node {$T \psi$}}}
+    child { node {$F \varphi$} 
+    	child {node {$F \psi$}}};
+\end{tikzpicture} &
+\begin{tikzpicture}[sibling distance=4em, level distance=3em]
+  \node {$F (\varphi \lequiv \psi)$}
+    child { node {$T \varphi$} 
+    	child {node {$F \psi$}}}
+    child { node {$F \varphi$} 
+    	child {node {$T \psi$}}};
+\end{tikzpicture} \\
+\hline
+\end{tabular}
+\end{minipage}
+\caption{The atomic tableaux}
+\label{fig:prop_tableaux}
+\end{figure*}
+
+\informal{The labels in each of the tableaux show, whether a formula $\varphi$ should be true ($T \varphi$) or false ($F \varphi$). The tableaux themselves then ``re-write'' the requirement in their root into more simple requirements. For example, the atomic tableau for $T(\varphi \to \psi)$ expresses that a formula $(\varphi \to \psi)$ is true (T), if $\varphi$ is false ($F \varphi$) or $\psi$ is true $T \psi$. The ``or'' is expressed by the two sons. On the other hand, the atomic tableau for $F(\varphi \to \psi)$ says, that $\varphi \to \psi$ is false, if $\varphi$ is true and $\psi$ is false. The ``and'' is presented by the fact, that both these facts are on a single branch.
+
+While the atomic tableaux are based on the semantics of propositional logic, the tableau method itself is purely syntactic -- it only says, how to manipulate tableaux in order to obtain the proof of a formula.}
+
+Using the atomic tableaux, we can define the tableau in general.
+
+\begin{definition}
+A \emph{finite tableau} is a binary tree labeled with entries defined inductively as
+\begin{enumerate}
+	\item every atomic tableau is a finite tableau,
+  \item if $P$ is an entry on a branch $V$ in a finite tableau $\tau$ and $\tau'$ is obtained by adjoining the atomic tableau for $P$ at the end of branch $V$, then $\tau'$ is also a finite tableau,
+  \item every finite tableau is formed by finite number of steps above.
+\end{enumerate}
+
+A \emph{tableau} $\tau$ is a (potentially infinite) sequence $\tau_0, \tau_1, \dots, \tau_n, \dots$  of finite tableaux such that $\tau_{n+1}$ is formed from $\tau_n$ by an application of step 2 above, formally, $\tau = \bigcup \tau_n$.
+\end{definition}
+
+An example of a tableau is shown bellow. In propositional logic, we do not need to repeat the entries that we expand, therefore, we will generally use only the version on the right, where these repeated entries are removed.\sidenote{In predicate logic, some of the repeated entries need to be included in the tableau again.}
+
+\begin{figure}[ht]
+\begin{minipage}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[sibling distance=4em, level distance=3em]
+  \node(n) {$F(((p \to q) \to p) \to p)$}
+    child { node {$T ((p \to q) \to p)$} 
+    	child { node {$F p$} 
+    		child {node {$T ((p \to q) \to p)$}
+    			child {node {$F(p \to q)$}
+    				child {node {$F(p \to q)$}
+	    				child {node {$Tp$}
+	    					child {node {$Fq$}
+	    						child {node {$\otimes$}}
+	    					}
+	    				}
+	    			}
+    			}
+    			child {node {$Tp$}
+    				child {node {$\otimes$}}
+    			}
+    		}
+    	}
+    };
+  \node[fit=(n)(n-1-1), draw] {};
+  \node[fit=(n-1-1-1)(n-1-1-1-1), draw] {};
+  \node[fit=(n-1-1-1-1-1)(n-1-1-1-1-1-1-1), draw] {};
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[sibling distance=4em, level distance=3em]
+  \node(n) {$F(((p \to q) \to p) \to p)$}
+    child { node {$T ((p \to q) \to p)$} 
+    	child { node {$F p$} 
+  			child {node {$F(p \to q)$}
+  				child {node {$Tp$}
+  					child {node {$Fq$}
+  						child {node {$\otimes$}}
+  					}
+  				}
+  			}
+  			child {node {$Tp$}
+  				child {node {$\otimes$}}
+  			}
+    	}
+    };
+\end{tikzpicture}
+\end{minipage}
+\caption{Example tableau. The rectangles on the left show the atomic tableaux used. The version on the right removes the repeated entries. The symbol $\otimes$ denotes a contradictory branch.}
+\label{fig:tableau_notation_proof}
+\end{figure}
+
+The definition above does not specify, how to choose the entry $P$ on branch $V$ for expansion. Later, we define the systematic tableau, where this is specified.
+
+Before we can define the formal notion of proof using the tableau method, we first need to discuss some of the terms related to tableaux. For an entry $P$ on a branch $V$ in a tableau $\tau$, we say that \emph{$P$ is reduced on $V$} if it occurs on $V$ as a root of an atomic tableau. A \emph{branch $V$ is contradictory} if it contains entries $T \varphi$ and $F \varphi$ for some proposition $\varphi$, otherwise it is noncontradictory. A \emph{branch $V$ is finished}, if it is contradictory, or every entry on $V$ is reduced on $V$, and finally, a \emph{tableau $\tau$ is finished} if every branch in $\tau$ is finished and $\tau$ is contradictory, if every branch in $\tau$ is contradictory.
+
+A \emph{tableau proof of $\varphi$} is a contradictory tableau with the root entry $F \varphi$. A formula \emph{$\varphi$ is tableau provable} ($\vdash \varphi$) if it has tableau proof. On the other hand, a \emph{refutation of $\varphi$ by tableau} is a contradictory tableau with the root entry $T \varphi$, and \emph{$\varphi$ is tableau refutable} it it has a tableau refutation, in this case we write $\vdash \neg \varphi$.
+
+\informal{Why does a tableau proof of $\varphi$ start with $F \varphi$? Tableaux in fact represent systematic searches for assignments that fulfill the condition expressed by the entry in the root. Therefore, if we cannot find a truth assignment in which $\varphi$ is false (the tableau for $F \varphi$ is contradictory), then $\varphi$ must be true in all assignments, and therefore valid. The formal proof of the soundness and completeness of the tableau methods will be discussed shortly.}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[sibling distance=8em, level distance=3em]
+  \node {$F(((\neg p \land \neg q) \lor p) \to (\neg p \land \neg q))$}
+    child { node {$T ((\neg p \land \neg q) \lor p)$} 
+    	child { node {$F (\neg p \land \neg q)$} 
+    		child {node {$T (\neg p \land \neg q)$}
+    			child {node {$\otimes$}}}
+    		child {node {$T p$}
+    			child {node {$F(\neg p)$}
+    				child {node {$T p$}}}
+    			child {node {$F(\neg q)$}}
+    			}}
+    	};
+\end{tikzpicture}
+\caption{Example tableau. Both left and middle branches are finished. The left one is also contradictory, while the middle one is noncontradictory. The right branch is not finished.}
+\label{fig:tableau_example}
+\end{figure}
+
+Figure~\ref{fig:tableau_example} shows a tableau with the root entry $F(((\neg p \land \neg q) \lor p) \to (\neg p \land \neg q))$. The tableau has three branches, the leftmost one is contradictory, as it contains both $F (\neg p \land \neg q)$ and $T (\neg p \land \neg q)$, the middle one is finished and noncontradictory, as every entry on that branch is expanded on it, and the rightmost one is unfinished, as the entry $F (\neg q)$ is not expanded on that branch.
+
+On the other hand, the tableau in Figure~\ref{fig:tableau_notation_proof} is a tableau proof of the proposition $(((p \to q) \to p) \to p)$, as it starts with the entry $F(((p \to q) \to p) \to p)$ and all its branches are contradictory.
+
+We often need to work with theories, and also prove propositions in a theory. Therefore, the notion of tableau needs to be generalized to the notion of tableau from a theory. Theories provide axioms, these are assumed to be true, and therefore the tableau from a theory $T$ can additionally contain entries of the from $T \varphi$ for an axiom $\varphi \in T$. More formally, a \emph{finite tableau from a theory $T$} is a generalized tableau with an additional rule -- if $V$ is a branch of finite tableau (from $T$) and $\varphi \in T$, then by adjoining $T \varphi$ at the end of $V$ we obtain a finite tableau from $T$. The rest of the definitions related to tableaux can be generalized in the same way. \emph{A tableau from $T$} is a sequence $\tau_0, \tau_1, \dots, \tau_n, \dots$ of finite tableaux from $T$ such that $\tau_{n+1}$ is formed from $\tau_n$ applying the rule 2 (from the definition of tableaux), or the additional rule above, formally $\tau = \bigcup \tau_n$. A \emph{tableau proof of $\varphi$ from $T$} is a contradictory tableau from $T$ with $F \varphi$ in the root. $T \vdash \varphi$ denotes that $\varphi$ is tableau provable from $T$. A \emph{refutation of $\varphi$ by a tableau from $T$} is a contradictory tableau from $T$ with $T \varphi$ in the root. A branch $V$ of a tableau from $T$ is finished, if it is contradictory, or every entry on $V$ is already reduced on $V$ and, additionally, $V$ contains $T \varphi$ for each $\varphi \in T$.
+
+While the current definition of tableaux is enough for proving propositions in theories. Here, we provide a stricter definition of so called systematic tableau. We will see later, that a systematic tableau is always finished and, in case the tableau is a proof of a proposition, it is also finite. The definition prescribes the precise order of steps to use while constructing tableaux from theories -- it specifies which entry in the tableau should be expanded next and also which axiom from the theory should be added next.
+
+\begin{definition}
+Let $R$ be an entry and $T = \{\varphi_0, \varphi_1, \dots\}$ a theory. Then the \emph{systematic tableau} $\tau$ from $T$ for the entry $R$ is the result of the following construction, i.e. $\tau = \bigcup \tau_n$
+\begin{enumerate}
+	\item $t_0$ is the atomic tableau for $R$, then proceed with the following steps until possible
+	\item Let $P$ be the leftmost entry in the smallest possible level of the tableau $\tau_n$, such that $P$ is not reduced on some noncontradictory branch through $P$.
+	\item Let $\tau'_n$ be the tableau obtained from $\tau_n$ by adjoining the atomic tableau for $P$ to every noncontradictory branch through $P$ ($\tau'_n = \tau_n$ if no such $P$ exists).
+	\item Let $\tau_{n+1}$ be the tableau obtained from $\tau'_n$ by adjoining $T \varphi_n$ to every noncontradictory branch that does not contain $T \varphi_n$ (if $\varphi_n$ does not exist, $\tau_{n+1}=\tau'_n$).
+\end{enumerate}
+\end{definition}
+
+The first thing to notice is that every systematic tableau is finished. Assume we have a tableau $\tau = \bigcup \tau_n$. If there is a noncontradictory branch in $\tau$, the prefix of this branch is noncontradictory in each $\tau_n$. Therefore, the branch must contain $T \varphi_n$ for each $\varphi_n$ in $T$. Let us now assume, there is an entry $R$, such that $R$ is not reduced on a branch. However, there are only finitely many levels above $R$ in $\tau$ and therefore only finitely many entries above $R$, thus $R$ will be eventually selected in step 2 and reduced in step 3, which is a contradiction with $R$ not being reduced. So, every noncontradictory branch in the tableau is finished (it contains $T \varphi_n$ for each $\varphi_n \in T$, and every entry on the branch is reduced).
+
+Interestingly, if tableau is used as a proof, it is not only finished, it is also finite. More specifically -- for every contradictory tableau $\tau = \bigcup t_n$, there is some $n$ such that $\tau_n$ is contradictory finite tableau. Why? Let $S$ be the set of nodes in $\tau$ that have no pair of contradictory entries $T \varphi$, $F \varphi$ amongst their predecessors. We can imagine this set as a ``top part'' of the tableau -- the root is definitely in this set. If there is a node in the set, all of its predecessors are also there. Such a set $S$ must be finite, because otherwise, by König's lemma, the subtree of $\tau$ induced by the set $S$ would have an infinite branch (it is a finitely branching infinite tree), a therefore the tableau $\tau$ would not be contradictory. Now, since $S$ is finite, all of the nodes in $S$ belong to levels up to $m$ for some $m$. Thus every node in level $m+1$ has a pair of contradictory entries among its predecessors. We can now choose $n$ such that the top $m+1$ levels of $\tau$ are a subtree of $\tau_n$. Every branch in $\tau_n$ now contains a pair of contradictory entries and is thus contradictory.
+
+In the construction of systematic tableaux, we extend only noncontradictory branches, therefore if a systematic tableau (from a theory) is a proof, it is finite (remember that a proof is a contradictory tableau with $F \varphi$ in its root). This is an important results, it shows that if a formula has a proof, we have an algorithm (the construction of systematic tableau) that can find the proof in finite amount of time. It also shows that any proof from a theory depends only on a finite number of axioms from the theory. 
+
+\section{Soundness and Completeness}
+
+Now, we want to show the soundness and completeness of the tableau method. We start with the soundness and show, that if a formula has a tableau proof from a theory, the formula is also valid in the theory. However, before we get to the proof, we need a definition and a lemma. We say that an \emph{entry $P$ agrees with an assignment $v$}, if $P$ is $T \varphi$ and $\bar{v}(\varphi) = 1$, or if $P$ is $F \varphi$ and $\bar{v}(\varphi) = 0$. A \emph{branch $V$ agrees with $v$} if every entry on $V$ agrees with $v$. 
+
+\begin{lemma}
+Let $v$ be a model of a theory $T$ that agrees with the root entry of a tableau $\tau = \bigcup \tau_n$. Than $\tau$ contains a branch that agrees with $v$.
+\end{lemma}
+\begin{proof}
+We will find a sequence $V_0, V_1, \dots$ for every $n$, such that $V_n$ is a branch in $\tau_n$, $V_n \subseteq V_{n+1}$ and $V_n$ agrees with $n$. We start by verifying the lemma for all atomic tableaux, thus verifying the base of the induction. For example, if we have $v(p) = 1, v(q) = 0$ and the atomic tableau with root entry $T(p \lor q)$, then $v$ agrees with the root entry, and the branch of the tableau containing $Tp$ also agrees with $v$. We can check the other atomic tableaux similarly. Now, if $\tau_{n+1}$ is obtained from $\tau_n$ without extending $V_n$, we take $V_{n+1} = V_n$. If $\tau_{n+1}$ is obtained from $\tau_n$ by adjoining $T \varphi$ to $V_n$ for some $\varphi \in T$, let $V_{n+1}$ be this branch, $v$ agrees with $V_{n+1}$ as $v$ is a model of $T$ (and therefore all axioms of $T$ are true in $v$). Finally, if $\tau_{n+1}$ is obtained from $\tau_n$ by adjoining the atomic tableau for some entry $P$ on $V_n$ to the end of $V_n$, we can extend $V_n$ to $V_{n+1}$ as required as $P$ agrees with $v$ and all atomic tableaux are verified (for example, if $P = T(p\lor q)$, and $v$ is as in example on atomic tableaux above, we obtain $V_{n+1}$ by adding $T(p \lor q)$ and $Tp$ to the end of $V_n$).
+\end{proof}
+
+Using the lemma, we can now easily proof the soundness of the tableau method in propositional logic.
+
+\begin{theorem}[Soundness of tableau method in propositional logic]
+For every theory $T$ and proposition $\varphi$, if $\varphi$ is tableau provable from $T$, then $\varphi$ is valid in $T$, i.e. $T \vdash \varphi \Rightarrow T \vDash \varphi$.
+\end{theorem}
+\begin{proof}
+If $\varphi$ is tableau provable from $T$, there is a contradictory tableau $\tau$ from $T$ with the root entry $F \varphi$. Suppose $\varphi$ is not valid in $T$. In such a case, there is a model $v$ of the theory $T$ in which $\varphi$ is false. Therefore, the root entry of the proof ($F \varphi$) agrees with $v$ and by the previous lemma, there is a branch in $\tau$ that agrees with $v$. However, that leads to contradiction as $\tau$ is the proof of $\varphi$ from $T$, and therefore every branch of $\tau$ is contradictory and cannot agree with $v$.
+\end{proof}
+
+The soundness theorem says that whenever we have a tableau proof of a formula in a theory, the formula is valid. However, can we also prove any valid formula using the tableau method? We indeed can, as the completeness theorem states. Again, before we get to the prove of the completeness theorem, we prove a helper lemma, that formally shows that a noncontradictory branch in a finished tableau provides a counterexample.
+
+\begin{lemma}
+Let $V$ be a noncontradictory branch of a finished tableau $\tau$. Then $V$ agrees with the following assignment $v$: $$v(p) = \twopartdefotherwise{1}{Tp \text{ occurs on } V}{0}$$
+\end{lemma}
+\begin{proof}
+We prove the lemma by induction on the structure of formulas in entries on $V$.
+\begin{itemize}
+ \item For entry $T p$ on $V$, where $p$ is a propositional variable, we have $\bar{v}(p)= 1$ by definition.
+ \item For entry $F p$ on $V$, the entry $T p$ is not on $V$ as $V$ is noncontradictory, and thus we have $\bar{v}(p) = 0$ by definition.
+ \item For entry $T (\varphi \land \psi)$, we have both $T \varphi$ and $T \psi$ on $V$ as $\tau$ is finished, and by induction, we know $\bar{v}(\varphi)=\bar{v}(\psi)=1$, therefore $\bar{v}(\varphi \land \psi)=1$ and $v$ agrees with $T (\varphi \land \psi)$.
+ \item For entry $F (\varphi \land \psi)$, we have $F \varphi$ or $F \psi$ on $V$ as $\tau$ is finished, therefore we have $\bar{v}(\varphi) = 0$, or $\bar{v}(\psi) = 0$, which leads to $\bar{v}(\varphi \land \psi) = 0$ and thus $v$ agrees with $F (\varphi \land \psi)$.
+\end{itemize}
+
+The lemma can be proven for the other possible types of entries (with $\lor, \to, \lequiv, \neg$) similarly to the last two steps for entries with $\land$.
+\end{proof}
+
+Using this lemma, it is simple to prove the completeness theorem.
+
+\begin{theorem}
+For every theory $T$ and proposition $\varphi$, if $\varphi$ is valid in $T$, then $\varphi$ is tableau provable from $T$, i.e. $T \vDash \varphi \Rightarrow T \vdash \varphi$.
+\end{theorem}
+\begin{proof}
+We will show that an arbitrary finished tableau $\tau$ from theory $T$ with root entry $T \varphi$ is contradictory, if $\varphi$ is valid in $T$.
+
+Assume (for contradiction), there is noncontradictory branch $V$ in $\tau$. The previous lemma provides an assignment $v$, such that $V$ agrees with $v$, therefore also the root entry $F \varphi$ agrees with $v$ and thus $\bar{v}(\varphi) = 0$. Since $V$ is finished, it contains $T \psi$ for every $\psi \in T$, but that means that $v$ is a model of $T$ ($V$ agrees with $v$, therefore $\bar{v}(\psi) = 1$ for all $\psi \in T$). However, this is contradiction with the assumption that $\varphi$ is valid in $T$, therefore every branch in $\tau$ is contradictory and $\tau$ is a proof of $\varphi$ from $T$. 
+\end{proof}
+
+We can now introduce syntactic definition of the semantic terms defined earlier and discuss the relation between the syntactic and semantic notions. First of all, we define the \emph{set of proposition provable from $T$} $$\Thm^\Prop(T) = \{\varphi | \varphi \in \VF_\Prop, T \vdash \varphi\}\,.$$ We say that a theory \emph{$T$ is inconsistent}, if $T \vdash \bot$, otherwise \emph{$T$ is consistent}. A theory \emph{$T$ is complete}, if it is consistent and every proposition is provable or refutable from $T$, i.e. if $T \vdash \neg \varphi$ or $T \vdash \varphi$ for every $\varphi \in \VF_\Prop$. A theory $T$ over $\Prop$ is \emph{an extension} of $T'$ over $\Prop'$, if $\Prop' \subseteq \Prop$ and $\Thm^{\Prop'}(T') \subseteq \Thm^{\Prop}(T)$, the extension is \emph{simple}, if $\Prop = \Prop'$, and it is \emph{conservative} if $\Thm^{\Prop'}(T') = \Thm^{\Prop}(T) \cap \VF_{\Prop'}$. Two \emph{theories $T$ and $T'$ are equivalent}, if $T$ is an extension of $T'$ and vice versa.
+
+There are strong relations between the syntactic terms introduced above and the semantic terms introduced in the previous chapter. Most of these are corollaries of the soundness and completeness of tableau method. For each theory $T$ and propositions $\varphi, \psi$ over $\Prop$ 
+\begin{enumerate}
+	\item $T \vdash \varphi$ if and only if $T \vDash \varphi\,,$
+	\item $\Thm^\Prop(T) = \theta^\Prop(T)\,,$
+	\item $T$ is inconsistent if and only if $T$ is unsatisfiable, i.e. it has no model,
+	\item $T$ is complete if and only if $T$ is semantically complete, i.e. it has a single model,
+	\item (deduction theorem) $T \cup \{\varphi\} \vdash \psi$ if and only if $T \vdash \varphi \to \psi\,.$
+\end{enumerate}
+
+Another important corollary of the theorems is the compactness theorem.
+
+\begin{theorem}
+A theory $T$ has a model if and only if every finite subset of $T$ has a model.
+\end{theorem}
+\begin{proof}
+The implication to right (if a theory has a model, every finite subset has a model) is trivial. In order to prove the other implication, we first realize that if $T$ has no model, it is inconsistent, thus $T \vdash \bot$ and $\bot$ is provable by a systematic tableau $\tau$ from $T$. The tableau is finite, therefore $\tau$ is also provable from a finite subset of $T' \subseteq T$ ($T'$ contains the axioms from $T$ that were used in the proof), $T'$ is inconsistent and, therefore, has no model.
+\end{proof}
+
+While the compactness theorem is interesting itself, it is also a very strong theorem that can be used to prove other theorems in different parts of mathematics. Consider for example the theorem on infinite $k$-colorable graphs\sidenote{A graph is $k$-colorable if there is a function $c: V \to k$, such that $c(u)\neq c(v)$ for every edge $\{u,v\}\in E$.}: a countably infinite graph $G = (V, E)$ is $k$-colorable if and only if each finite subgraph of $G$ is $k$-colorable. Again, if the infinite graph is colorable, every finite subgraph is obviously also colorable. The other implication is more interesting. Consider a set of propositional variables $\Prop = \{p_{u,i} | u \in V, i \in k\}$, where $p_{u,i}$ means that vertex $u$ has color $i$. We can create a theory $T$ with axioms $p_{u,0} \lor p_{u,1} \lor \dots \lor p_{u,k-1}$ for each $u \in V$ (every vertex has a color), $\neg(p_{u,i} \land p_{u,j})$ for every $u \in V, i < j < k$ (every vertex has only one color), and $\neg(p_{u,i} \land p_{v,i})$ for each $\{u,v\}\in E, i < k$ (two vertices connected with an edge do not have the same color). Obviously, $G$ is colorable if and only if $T$ has a model. We only need to show, that every finite $T' \subseteq T$ has a model (and use the compactness theorem). Let $G'$ be a subgraph of $G$ induced by  vertices $u$ such that $p_{u,i}$ appears in $T'$ for some $i$. By assumption, $G'$ is $k$-colorable, and therefore $T'$ has a model.

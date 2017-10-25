@@ -30,7 +30,7 @@
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\rng}{rng}
 \DeclareMathOperator{\VF}{VF}
-
+\DeclareMathOperator{\Thm}{Thm}
 
 \newcommand{\twopartdef}[4]
 {
@@ -41,12 +41,12 @@
 		\end{array}
 	\right.
 }
-\newcommand{\twopartdefotherwise}[4]
+\newcommand{\twopartdefotherwise}[3]
 {
 	\left\{
 		\begin{array}{ll}
-			#1 & \text{pro } #2 \\
-			#3 & \text{jinak} #4
+			#1 & \text{if } #2 \\
+			#3 & \text{otherwise}
 		\end{array}
 	\right.
 }
