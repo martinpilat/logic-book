@@ -495,3 +495,201 @@ The implication to right (if a theory has a model, every finite subset has a mod
 \end{proof}
 
 While the compactness theorem is interesting itself, it is also a very strong theorem that can be used to prove other theorems in different parts of mathematics. Consider for example the theorem on infinite $k$-colorable graphs\sidenote{A graph is $k$-colorable if there is a function $c: V \to k$, such that $c(u)\neq c(v)$ for every edge $\{u,v\}\in E$.}: a countably infinite graph $G = (V, E)$ is $k$-colorable if and only if each finite subgraph of $G$ is $k$-colorable. Again, if the infinite graph is colorable, every finite subgraph is obviously also colorable. The other implication is more interesting. Consider a set of propositional variables $\Prop = \{p_{u,i} | u \in V, i \in k\}$, where $p_{u,i}$ means that vertex $u$ has color $i$. We can create a theory $T$ with axioms $p_{u,0} \lor p_{u,1} \lor \dots \lor p_{u,k-1}$ for each $u \in V$ (every vertex has a color), $\neg(p_{u,i} \land p_{u,j})$ for every $u \in V, i < j < k$ (every vertex has only one color), and $\neg(p_{u,i} \land p_{v,i})$ for each $\{u,v\}\in E, i < k$ (two vertices connected with an edge do not have the same color). Obviously, $G$ is colorable if and only if $T$ has a model. We only need to show, that every finite $T' \subseteq T$ has a model (and use the compactness theorem). Let $G'$ be a subgraph of $G$ induced by  vertices $u$ such that $p_{u,i}$ appears in $T'$ for some $i$. By assumption, $G'$ is $k$-colorable, and therefore $T'$ has a model.
+
+\section{Hilbert systems}
+
+A (more traditional) alternative to the tableau method is the Hilbert calculus. In this proof system, formulas are defined using only implication ($\to$) and negation ($\neg$), and all other logical connectives are defined using these two (we already know, that the set $\{\to, \neg\}$ is adequate, so this can be done). The Hilbert proof system then defines the following set of schemas of axioms (for two proposition $\varphi, \psi \in \VF_\Prop$):
+\begin{enumerate}
+\item $\varphi \to (\psi \to \varphi)$
+\item $(\varphi \to (\psi \to \chi)) \to ((\varphi \to \psi) \to (\varphi \to \chi))$
+\item $(\neg \varphi \to \neg \psi) \to (\psi \to \varphi)$
+\end{enumerate}
+Apart from the axioms, there is also a single inference rule: \emph{modus ponens}, which can be expressed as $$\frac{\varphi, \varphi \to \psi}{\psi}\,.$$That means that if $\varphi$ and $\varphi \to \psi$ are true we can infer that also $\psi$ is true.
+
+A proof of formula $\varphi$ from a theory $T$ in the Hilbert-style is defined as a finite sequence of formulas $\varphi_0, \varphi_1, \dots \varphi_n = \varphi$ such that for every $i \leq n$, $\varphi_i$ is a logical axiom, or an axiom from the theory ($\varphi_n \in T$), or $\varphi_i$ is inferred from $\varphi_j$ and $\varphi_k$ ($j,k < i$) using the modus ponens rule. As with tableau method, a formula $\varphi$ is provable from $T$ ($T \vdash_H \varphi$), if it has a proof.
+
+For example, we can show, that $\varphi \to \psi$ is provable from $T = \{\neg \varphi\}$ for every $\psi$.
+
+\begin{enumerate}
+\item $\neg \varphi$
+\item $\neg \varphi \to (\neg \psi \to \neg \varphi)$
+\item $\neg \psi \to \neg \varphi$
+\item $(\neg \psi \to \neg \varphi) \to (\varphi \to \psi)$
+\item $\varphi \to \psi$
+\end{enumerate}
+
+The first two steps are axiom of a theory and logical axiom (the schema number 2). The third formula is obtained from the previous two by modus ponens, the fourth one is again an axiom (by schema number 3), and the last one is obtained from formulas number 3 and 4 using modus ponens.
+
+It is easy to prove the soundness of the Hilbert calculus ($T \vdash_H \varphi \Rightarrow T \vDash \varphi$). Logical axioms are tautologies, and axioms from $T$ hold in all models of $T$, therefore the soundness holds for axioms of any kind, and the modus ponens rule is sound (as can be easily checked using the truth tables of $\varphi$, $\varphi \to \psi$, and $\psi$). Thus, the soundness is proved. The Hilbert calculus is also complete, but we will not show the proof here.
+
+\section{Resolution method}
+
+The resolution method is the base of many automated systems -- SAT solvers, automated deduction or verification systems and Prolog\sidenote{Prolog is a programming language based on the specification of programs as sets of Horn formulas.} interpreters. The method assumes the input formulas are given in CNF and it works with a set representation of the formulas (a CNF formula is represented as a set of sets of literals). The method has no explicit axioms, but some of the axioms are implicitly included. It uses a single inferences rule (the resolution rule). Similarly to the tableau method, the resolution method is also a refutation procedure, i.e. it tries to show that a given formula or theory is unsatisfiable. There are several variants of the resolution method that gives more specific rules on when the resolution rule can be applied (e.g. the LI resolution, or the SLD resolution).
+
+Before we describe the resolution method formally, we must define the set representation of CNF formulas. Similarly to our discussion on CNF formulas, a literal is either a propositional variable or its negation. The complementary literal to $l$ is still denoted as $\bar{l}$. A \emph{clause} $C$ is a finite set of literals, and an \emph{empty clause}, denoted as $\square\,,$ is never satisfied. A \emph{formula $S$} is then a (possibly infinite) set of clauses. An empty formula $\emptyset$ is always satisfied. Infinite formulas represent infinite theories. A \emph{(partial) assignment $\mathcal{V}$} is a consistent set of literals (i.e. the set does not contain a complementary pair of literals). An assignment is \emph{total}, if it contains a positive or negative literal for each propositional variable. An assignment $\mathcal{V}$ satisfies a formula $S$ (denoted as $\mathcal{V} \vDash S$), if $C \cap \mathcal{V} \neq \emptyset$ for each clause $C \in S$.
+
+For example, the CNF-formula $((\neg p \lor q) \land (\neg p \lor \neg q \lor r) \land (\neg r \lor \neg s) \land s)$ is represented as $S = \{\{\neg p, q\}, \{\neg p, \neg q, r\}, \{\neg r, \neg s\}, \{s\}\}$ and $\mathcal{V} = \{s, \neg r, \neg p\}$ is a satisfying assignment for $S$.
+
+\informal{While the definitions above are different from those we used previously, they are in fact equivalent. The only reason why they are worded differently is the set representation of the CNF formulas. We know that a formula in CNF is a conjunction of clauses, therefore, we can only represent them as a set of clauses. A clause is a disjunction of literals, and therefore it is again natural to represent each clause as a set of literals. The definition of assignment may seem strange, but the set of literals only says which literals are true and which are false.}
+
+There is only one inference rule in resolution -- the resolution rule: let $C_1$ and $C_2$ are clauses such that $l \in C_1$ and $\bar{l} \in C_2$, then infer a clause $C$ (called a resolvent) such that $C = (C_1 \setminus \{l\}) \cup (C_2 \setminus \{\bar{l}\})$. The resolution rule is a special case of the cut rule: $$\frac{\varphi \lor \psi \qquad \neg \varphi \lor \chi}{\psi \lor \chi}\,,$$ for any formulas $\varphi, \psi, \chi$. 
+
+It is easy to realize that the resolution rule is sound, i.e. if $\mathcal{V} \vDash C_1$ and $\mathcal{V} \vDash C_2$, then $\mathcal{V} \vDash C$ -- the assignment $\mathcal{V}$ cannot contain a pair of complementary literals (by definition), therefore at least one of the intersections $\mathcal{V} \cap (C_1 \setminus \{l\})$ or $\mathcal{V} \cap (C_2 \setminus \{\bar{l}\})$ must be non-empty, therefore $\mathcal{V} \cap C$ is also non-empty.
+
+A \emph{resolution proof (deduction) of a clause $C$ from formula $S$} is a finite sequence of clauses $C_0, C_1, \dots, C_n = C$ such that for each $i \leq n$, $C_i \in S$, or $C_i$ is a resolvent of some previous clauses. As usual, a \emph{clause $C$ is provable from formula $S$} ($S \vdash_R C$), if it has a resolution proof from $S$. We already mentioned that resolution is used as a refutation procedure. A \emph{resolution refutation of formula $S$} is a resolution proof $S \vdash_R \square$, and a \emph{formula is resolution refutable}, if there is such a proof.
+
+Let us now show, that resolution is also a sound and complete method. The soundness is simple, and follows from the soundness of the resolution rule.
+
+\begin{theorem}[Soundness of resolution]
+If a formula $S$ is resolution refutable, it is unsatisfiable.
+\end{theorem}
+\begin{proof}
+Let $S \vdash_R \square$ and assume (for contradiction) there is an assignment $\mathcal{V}$ such that $\mathcal{V} \vDash S$. Because the resolution rule is sound, also $\mathcal{V} \vDash \square$, but that is not possible ($\square$ is never satisfied).
+\end{proof}
+
+The proof of completeness is a bit more involved. To this end, we first define resolution trees, which in fact show, how we obtained a proof of a clause. A \emph{resolution tree} of clause $C$ from formula $S$ is a finite binary tree with nodes labeled by clauses such that the root is labeled by $C$, the leaves are labeled by clauses from $S$, and every inner node is labeled by the resolvent of its sons. Obviously, there is a resolution tree for $C$ from $S$ if and only if $S \vdash_R C$.
+
+Another important notion is the \emph{resolution closure} of a formula $S$, denoted as $\mathcal{R}(S)$ and defined as the smallest set containing all clauses of $S$ and closed under the resolution rule, i.e. if $C_1, C_2 \in \mathcal{R}(S)$ and $C$ is the resolvent of $C_1$ and $C_2$, then also $C \in \mathcal{R}(S)$. Obviously, $C \in \mathcal{R}(S)$ if and only if $S \vdash_R C$, and all the notions on resolution proofs can be also defined using the resolution trees and closures.
+
+As a simple example of the resolution method, we can show that formula $S = \{\{p, r\}, \{q, \neg r\}, \{\neg q\}, \{\neg p, t\}, \{\neg s\}, \{s, \neg t\}\}$ is unsatisfiable as $S \vdash_R \square$.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[level 1/.style={sibling distance=15em}, 
+                    level 2/.style={sibling distance=8em}, 
+                    level distance=4em]
+  \node {$\square$}
+    child { node {$\{p\}$} 
+      child {node {$\{p, q\}$} 
+        child {node {$\{p, r\}$}}
+        child {node {$\{q, \neg r\}$}}
+      }
+      child {node {$\{\neg q\}$}} 
+    }
+    child { node {$\{\neg p\}$}
+      child { node {$\{\neg p, s\}$}
+        child { node {$\{\neg p, t\}$}}
+        child { node {$\{s, \neg t\}$}}
+      }
+      child { node {$\{\neg s\}$}}  
+    };
+\end{tikzpicture}
+\caption{The resolution proof of $S \vdash_R \square$.}
+\end{figure}
+
+We can also compute the resolution closure 
+\begin{align*}
+\mathcal{R}(S) =  \{ & \{p, r\}, \{q, \neg r\}, \{\neg q\}, \{\neg p, t\}, \{\neg s\}, \{s, \neg t\}, \{p, q\}, \\ 
+& \{\neg r\}, \{r,t\}, \{q,t\}, \{\neg t\}, \{\neg p, s\}, \{r,s\}, \{t\}, \{q\}, \\ 
+& \{q,s\}, \square, \{\neg p\}, \{p\}, \{r\}, \{s\}\}\,,
+\end{align*}
+and as $\square \in \mathcal{R}(S)$, we also know that $S$ in unsatisfiable.
+
+In the proof of completeness, we will use the notion of reduction by substitution. Let $S$ be a formula and $l$ a literal, we define $$S^l = \{C \setminus \{\bar{l}\}| l \notin C \in S\}\,.$$ The new formula $S^l$ is in fact equivalent to a formula, where the literal $l$ was assigned a true value ($\top$) and $\bar{l}$ was assigned false value ($\bot$). In such a case, any clause containing $l$ can be removed (as it is satisfied), and $\bar{l}$ is removed from all other clauses. The formula $S^l$ does not contain any of the literals $l$ and $\bar{l}$, and if $S$ contained a clause $\{\bar{l}\}$, then $S^l$ contains $\square$.
+
+In the proof of completeness of the resolution method, we will need the following lemma.
+
+\begin{lemma}
+A formula $S$ is satisfiable if and only if $S^l$ or $S^{\bar{l}}$ is satisfiable.
+\end{lemma}
+\begin{proof}
+Let $\mathcal{V} \vDash S$ and (without loss of generality) $\bar{l} \in \mathcal{V}$. Then, $\mathcal{V} \vDash S^l$, as for clauses $C$ such that $l \notin C \in S$, $\mathcal{V} \vDash C \setminus \{\bar{l}\}$, as $\mathcal{V}$ does not contain $\{\bar{l}\}$ and it is satisfying for each clause $C \in S$.
+
+On the other hand, assume (without loss of generality) $\mathcal{V} \vDash S^l$ for some $\mathcal{V}$. Since neither $l$ nor $\bar{l}$ occur in $S^l$, $\mathcal{V}' = (\mathcal{V} \setminus \{\bar{l}) \cup \{l\}\} \vDash S^l$. Then, $\mathcal{V}' \vDash S$, as for $C \in S$, such that $l \in C$, also $l \in \mathcal{V}$ and for $C \in S$ not containing $l$, we have $\mathcal{V}' \vDash (C \setminus \{\bar{l}\}) \in S^l$.
+\end{proof}
+
+The reductions of literals can be represented in a binary tree -- so called reduction tree. The root of the tree is the formula $S$ and each node $N$ has two sons -- $N^l$ and $N^{\bar{l}}$. With the reduction tree, formula $S$ is unsatisfiable if and only if every branch contains $\square$.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[sibling distance=10em, level distance=3em]
+  \node {$S = \{\{p\}, \{ \neg q\}, \{\neg p, \neg q\}\}$}
+    child { node {$S^p = \{\{\neg q\}\}$} 
+      child {node {$S^{pq} = \{\square\}$}}
+      child {node {$S^{p\bar{q}} = \emptyset$}} 
+    }
+    child { node {$S^{\bar{p}} = \{\square, \{\neg q\}\}$}};
+\end{tikzpicture}
+\caption{An example of a reduction tree.}
+\end{figure}
+
+Interestingly, since $S$ can be infinite over countable language, the tree can also be infinite. However, if $S$ is unsatisfiable, according to the compactness theorem, there is a finite $S' \subseteq S$ such that $S'$ is unsatisfiable. Therefore, after the reduction of all literals from $S'$, there will be $\square$ on every branch after finitely many steps.
+
+Finally, we can prove the completeness of the resolution. The theorem bellow shows the completeness for finite formulas, the general version is obtained from that theorem by using the compactness, similarly to the discussion on the reduction trees above.
+
+\begin{theorem}[completeness of resolution]
+If a finite $S$ is unsatisfiable, it is resolution refutable, i.e. $S \vdash_R \square$.
+\end{theorem}
+\begin{proof}
+We will prove the theorem by induction on the number of variables in $S$. There is only one unsatisfiable $S$ without variables -- \{$\square$\} and therefore $S \vdash_R \square$ (the proof is the single step $\square$).
+
+Let us now assume, that $S$ is unsatisfiable and contains a literal $l$. Then, by the previous lemma, $S^l$ and $S^{\bar{l}}$ are unsatisfiable. These contain less literals than $S$ and therefore by induction there are resolution trees $T^l$ and $T^{\bar{l}}$ for derivation of $\square$ from $S^l$ and $S^{\bar{l}}$ respectively. Now, if every leaf of $T^l$ is in $S$, then $T^l$ is a resolution tree of $\square$ from $S$ and therefore $S \vdash_R \square$. Otherwise, we can append the literal $l$ to each leaf of $T^l$ which is not in $S$ and to all of its predecessors, thus obtaining the resolution tree for $\{l\}$ from $S$ (if the original leaf was not in $S$, the one with added $l$ will be, as the only difference between $S^l$ and $S$ is the removal of $l$). Similarly, by appending $\{\bar{l}\}$ to leaves in $T^{\bar{l}}$ we obtain resolution tree for $\{\bar{l}\}$ from $S$. Resolving the roots of these trees yields the resolution tree of $\square$ from $S$.
+\end{proof}
+
+We already mentioned that resolution is widely used in different automated systems -- SAT solvers, formal verification systems etc. One of the important examples is the Prolog interpreter. Prolog is a programming language, where programs are sets of Horn clauses. The program can then answer queries (goals). As the Prolog programs are limited to Horn formulas, the resolution method can be improved. The Prolog interpreter uses so called SLD resolution which is based on LD resolution and that is in turn based on LI resolution, which is a special case of linear resolution. Therefore, we will now define the linear resolution, show that LI resolution is complete for Horn formulas and finally define the LD and SLD resolution as simple improvements of the LI resolution.
+
+\subsection{Linear resolution}
+
+The general resolution procedure can be further simplified without losing the completeness. We define a linear proof of a clause $C$ from a formula $S$ as a finite sequence of pairs $(C_0, B_0), \dots, (C_n, B_n)$, such that $C_0 \in S$ and for every $i \leq n$, $B_i \in S$ or $B_i = C_j$ for some $j < i$, and $C_{i+1}$ is a resolvent of $C_i$ and $B_i$, where $C_{n+1} = C$. In the linear proof $C_0$ is called the \emph{starting clause}, $C_i$ a \emph{central clause}, and $B_i$ a \emph{side clause}. Again, we say that $C$ is \emph{linearly provable} from $S$ ($S \vdash_L C$), if it has a linear proof from $S$. A linear proof of $\square$ from $S$ is a \emph{linear refutation} of $S$ and $S$ is \emph{linearly refutable} if $S \vdash \square$.
+
+Obviously, every linear proof can be transformed into a general resolution proof and therefore the linear resolution is also sound. Moreover, is is also complete (we omit the proof of completeness here).
+
+%TODO: \add{Example of linear resolution}
+
+\subsection{LI-resolution}
+
+If we deal with Horn formulas, we can use an even more refined resolution procedure called linear input (LI) resolution. A LI-resolution from a formula $S$ is a linear resolution from $S$ where each side clause $B_i$ is from the input formula $S$ (i.e. $B_i$ cannot be a previously resolved central clause). We write $S \vdash_{LI} C$ to denote that $C$ is provable by LI-resolution from $S$.
+
+We already defined Horn formulas while discussing the satisfiability problem. The definition from the resolution point of view is similar, the only difference is that we again use the set representation instead of the general one (and also formulas in this case can be infinite, as there is no distinction between theories and formulas in resolution). So, a \emph{Horn clause} is a finite set of literals containing at most one positive literal. A Horn formula is then a (potentially infinite) set of Horn clauses. A clause \{p\}, where $p$ is a positive literal is called a \emph{fact}, and a clause with exactly one positive literal is called a \emph{rule}. Rules and facts are also called \emph{program clauses}. A non-empty Horn clause without any positive literal is called a \emph{goal}.
+
+We can easily see that if a Horn formula $S$ is unsatisfiable and it does not contain $\square$, it must contain some fact and some goal. Why? If $S$ does not contain any fact, it is satisfied by setting all the propositional variables to 0. if it does not contain any goal, it is satisfied by setting all variables to 1.
+
+The LI-resolution is complete for Horn formulas, as the following theorem says. The proof of the theorem is similar to the proof of completeness of general resolution.
+
+\begin{theorem}[completeness of LI-resolution]
+If $T$ is satisfiable Horn formula but $T \cup \{G\}$ is unsatisfiable for some goal $G$, then $\square$ a LI-resolution from $T \cup \{G\}$ with starting clause $G$.
+\end{theorem}
+\begin{proof}
+As in the proof of completeness of general resolution, we use induction on the number of variables, this time in $T$. By the observation above, $T$ must contain a fact $\{p\}$ for some variable $p$ ($T \cup \{G\}$) is unsatisfiable, therefore it must contain a goal and a fact, $G$ is a goal, so the fact must be in $T$). By the lemma we used in the proof of completeness of general resolution, $T' = (T \cup \{G\})^p = T^p \cup \{G^p\}$ is unsatisfiable and $G^p = G \setminus \{\neg p\}$. Now, if $G^p = \square$, we have $G = \{\neg p\}$ and thus $\square$ is a resolvent of $G$ and $\{p\}\in T$. Otherwise, since $T^p$ is satisfiable (by the satisfying assignment for $T$) and has less variables, by induction assumption, there is an LI-resolution of $\square$ form $T'$ starting with $G^p$. If we now append the literal $\neg p$ to all leaves that are not in $T \cup \{G\}$ (and their predecessors), we have an LI-resolution proof of $\{\neg p\}$ from $T$, we can resolve it with $\{p\}$ from $T$ to obtain the LI-resolution proof of $\square$ from $T$.
+\end{proof}
+
+\subsection{Resolution in Prolog}
+
+A program in Prolog is a set of program clauses (i.e. rules or facts), an example program is shown bellow (the program contains seven clauses, the numbers indicate line numbers and are not a part of the program):
+
+\begin{verbatim}
+1: p:-q,r.                    5: r.
+2: p:-s.                      6: s:-t.
+3: q.                         7: s.
+4: q:-s.
+\end{verbatim}
+
+The formulas on lines 3, 5, and 7 are facts, the rest are rules. The symbol \texttt{:-} can be interpreted as an implication from right to left ($\leftarrow$). So, the meaning of the clauses is as given bellow:
+
+\begin{multicols}{2}
+\begin{enumerate}
+  \item $q \land r \to p$
+  \item $s \to p$
+  \item $q$
+  \item $s \to q$
+  \columnbreak
+  \item $r$
+  \item $t \to s$
+  \item $s$
+\end{enumerate}
+\end{multicols}
+
+In Prolog, we want to know whether a query is a consequence of a given program. A query is a conjuction of goals (positive literals), e.g. $p \land q$. That means, the question is, whether for a program $P$ and query ($q_1 \land \dots \land q_n$), it holds that $P \vDash (q_1 \land \dots \land q_n)$. However, such a question is equivalent to the fact that $P \cup \{\neg q_1, \dots, \neg q_n\}$ is unsatisfiable, which is equivalent to $\square$ having LI-resolution from $P \cup \{G\}$ starting with goal $G = \{\neg q_1, \dots, \neg q_n\}$.
+
+In the Prolog interpreter, the clauses are represented as sequences of literals (as opposed to sets of literals as in LI resolution). Therefore, Prolog uses a slightly different version of LI-resolution called the LD-resolution (linear definite). In LD resolution, the resolvent of a goal $(\neg p_1, \dots, \neg p_{i-1}, \neg p_i, \neg p_{i+1}, \dots, \neg p_n)$ and a rule $(p_i, \neg q_1, \dots, \neg q_m)$ is a new goal $(\neg p_1, \dots, \neg p_{i-1}, \neg q_1, \dots, \neg q_m, \neg p_{i+1}, \dots, \neg p_n)$, i.e. one of the negative literals in the current goal is replaced by the negative literals from the rule. 
+
+The LD resolution does not specify, which of the negative literals in the goal should be resolved next. This would make programming in Prolog hard, therefore it extends the LD resolution with a selection rule $\mathcal{R}$. Typically, the rule is ``select the first literal''. More formally, an SLD-resolution via $\mathcal{R}$ is an LD-resolution in which each step $(C_i, B_i)$ we resolve through $\mathcal{R}(C_i)$.
+
+Obviously, any LI-resolution can be expressed as LD-resolution (just use the sequences of literals instead of the sets of literals), and any LD-resolution can be expressed as an SLD-resolution with the correct selection rule
+ (select the literal that was selected in the LD resolution). Therefore, we can see that SLD resolution is complete for Prolog programs.
+
+Further discussion on Prolog is out of the scope of this lecture, so we will omit it here. The important message was to show an application of logic in computer science. Prolog is quite often used in certain areas of artificial intelligence.
+
+\bigskip
+
+This concludes the part of the lecture dedicated to propositional logic. We started with the discussion about the syntax of propositions, explained their semantics and showed some formal proof systems. In the next part of the lecture, we will build on the understanding of concepts from  propositional logic and extend them to predicate logic (more precisely to first order logic).
