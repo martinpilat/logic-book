@@ -409,7 +409,7 @@ Compared to the propositional version of the tableau method, the definition of a
 
 We can now define the systematic tableau in predicate logic. The systematic tableau is again always finished and, moreover, if it is a proof, it is finite, as we shall see later. Let $R$ be an entry and $T=\{\varphi_0, \varphi_1, \dots\}$ a theory. The systematic tableau for $R$ from $T$ is the result $\tau = \cup \tau_n$ of the following construction:
 \begin{enumerate}
-  \item $t_0$ is the atomic tablau for $R$. In case $R$ is of the form $T(\exists x)\varphi(x)$ or $F(\forall x) \varphi(x)$ we take $c_0$ as the new constant. In case $R$ is of form $T(\forall x) \varphi(x)$ or $F(\exists x) \varphi(x)$ we take $t_1$ as the term.
+  \item $t_0$ is the atomic tableau for $R$. In case $R$ is of the form $T(\exists x)\varphi(x)$ or $F(\forall x) \varphi(x)$ we take $c_0$ as the new constant. In case $R$ is of form $T(\forall x) \varphi(x)$ or $F(\exists x) \varphi(x)$ we take $t_1$ as the term.
   \item Let $v$ be the leftmost node in the smallest level as possible in tableau $\tau_n$ containing an occurrence of an entry $P$ that is not reduced on some noncontradictory branch through $v$.
   \item If $P$ is neither $T(\forall x)\varphi(x)$ nor $F(\exists x)\varphi(x)$, let $\tau'_n$ be the tableau obtained from $\tau_n$ by adjoining the atomic tableau for $P$ to every noncontradictory branch through $v$. In case $P$ is in the form $T(\exists x)\varphi(x)$ or $F(\forall x) \varphi(x)$, we take $c_i$ as the new constant for lowest possible $i$.
   \item If $P$ is either $T(\forall x)\varphi(x)$ or $F(\exists x)\varphi(x)$ and it has the $i$-th occurrence in $v$, let $\tau'_n$ be the tableau obtained from $\tau_n$ by adjoining the atomic tableau for $P$ to every noncontradictory branch through $v$, where we take the term $t_i$ for $t$.
@@ -453,7 +453,7 @@ An example of a systematic tableau is shown in Figure~\ref{fig:tableau_systemati
     	}
     };
 \end{tikzpicture}
-\caption{An example of a systematic tableau. The left branch is contradictory, while the right one is noncontradictory and finished but infite.}
+\caption{An example of a systematic tableau. The left branch is contradictory, while the right one is noncontradictory and finished but infinite.}
 \label{fig:tableau_systematic}
 \end{figure}
 
@@ -461,3 +461,109 @@ An example of a systematic tableau is shown in Figure~\ref{fig:tableau_systemati
 As in propositional logic, every systematic tableau is finished. We can show this using the same method as in propositional logic. Let $\tau = \cup \tau_n$ be a systematic tableau from $T = \{\varphi_0, \varphi_1, \dots\}$ with a root entry $R$ and let $P$ be an entry in a node $v$ of the tableau $\tau$. There are only finitely many entries in levels above $v$, therefore if the occurrence of $P$ in $v$ was unreduced, it would be eventually found in step 2, and reduced in steps 3 or 4 of the construction above. The step 4 above ensures that for every $\varphi_n \in T$, $T \varphi_n$ is in the tableau no later in $\tau_{n+1}$ on every noncontradictory branch. Therefore, all the branches in the tableau are finished.
 
 We can also easily show that, if a systematic tableau $\tau$ is a proof (from a theory $T$), it is finite. Assume that $\tau$ is infinite, the by the König's lemma it contains an infinite branch. But this branch is noncontradictory, since we prolong only noncontradictory branches in the construction. But that is a contradiction with $\tau$ being a proof as proofs are contradictory tableaux.
+
+Up until now, we have discussed tableau method only in languages without equality, however, the principles are the same in languages with equality, we just need to add the equality axioms into the theory. The \emph{equality axioms for language $L$} are 
+\begin{enumerate}
+	\item $x=x\,,$
+	\item $x_1 = y_1 \land \dots \land x_n=y_n \to f(x_1, \dots, x_n) = f(y_1, \dots y_n)$ for every $n$-ary function symbol $f$ in $L\,,$ and
+	\item $x_1 = y_1 \land \dots \land x_n=y_n \to (R(x_1, \dots, x_n) \to R(y_1, \dots y_n))$ for every $n$-ary relation symbol $R$ in $L$ (including ``='').
+\end{enumerate}
+The tableau proof from a theory $T$ in language $L$ with equality is a tableau proof from $T^*$ where $T^*$ denotes the extension of $T$ by adding the axioms of equality for $L$.
+
+The problem is that the extended theory $T^*$ can have models, where equality is represented by a relation $=^A$ which is different from identity. This can be solved by considering the quotient structures by $=^A$ of these models. Let $\sim$ be an equivalence on $A$, $f: A \to A^n$, and $R\subseteq A^n$ for $n \in \Nat$. Then $\sim$ is a \emph{congruence for the function $f$} if for every $x_1, \dots, x_n, y_1, \dots, y_n \in A: x_1 \sim x_2 \land \dots \land x_n \sim y_n \Rightarrow f(x_1, \dots, x_n) \sim{=} f(y_1, \dots, y_n)$, and it is a \emph{congruence for the relation $R$} if for every $x_1, \dots, x_n, y_1, \dots, y_n \in A: x_1 \sim x_2 \land \dots \land x_n \sim y_n \Rightarrow R(x_1, \dots, x_n) \Leftrightarrow R(y_1, \dots, y_n)$. 
+
+Let an equivalence $\sim$ in $A$ is a congruence for every function and relation in a structure $\cA = \struct{A, \cF^A, \cR^A}$ of language $L = \struct{\cF, \cR}$. The \emph{quotient structure of $\cA$ by $\sim$} is the structure $\quotient{\cA}{\sim} = \struct{\quotient{A}{\sim}, \cF^{\quotient{A}{\sim}}, \cR^{\quotient{A}{\sim}}}$ where
+\begin{align*}
+f^{\quotient{A}{\sim}}([x_1]_\sim, \dots [x_n]_\sim)&=[f^A(x_1, \dots, x_n)]_\sim \\
+R^{\quotient{A}{\sim}}([x_1]_\sim, \dots, [x_n]_\sim) &\Leftrightarrow R^A(x_1, \dots, x_n)
+\end{align*}
+for each $f \in \cF, R \in \cR$, and $x_1, \dots, x_n \in A$. 
+
+The axioms 1 and 3 of equality ensure that any relation $=^A$ that satisfies them is an equivalence, the axioms 2 and 3 ensure that the relation is also a congruence. If we have a model $\cA \vDash T^*$ then also ($\quotient{\cA}{=^A}) \vDash T^*$. Moreover, equality is interpreted as identity in $\quotient{\cA}{=^A}$.
+
+We can now prove the soundness of the tableau method in predicate logic. The proof again closely resembles the one from the propositional logic. We will in fact also use a similar lemma. We say that a model $\cA$ agrees with an entry $P$ in a tableau if $P$ is $T \varphi$ and $\cA \vDash \varphi$ or if $P$ is $F \varphi$ and $\cA \vDash \neg \varphi$, i.e. $\cA \nvDash \varphi$. Moreover, $\cA$ agrees with a branch $V$ if $\cA$ agrees with every entry on $V$.
+
+\begin{lemma}
+Let $\cA$ be a model of a theory $T$ of a language $L$ that agrees with the root entry $R$ in a tableau $\tau = \cup \tau_n$ from $T$. Then $\cA$ can be expanded to a language $L_C$ so that it agrees with some branch $V$ in $\tau$.
+\end{lemma}
+\begin{proof}
+We prove the lemma by induction on $n$. We will find a branch $V_n$ in $\tau_n$ and an expansion $\cA_n$ by constants $c^A$ for all $c \in L_C \setminus L$ on $V_n$ such that $\cA_n$ agrees with $V_n$ and $V_{n-1} \subseteq V_{n}$.
+
+Assume we have a branch $V_n$ in $\tau_n$ and an expansion $\cA_n$ that agrees with $V_n$.
+\begin{itemize}
+	\item If $\tau_{n+1}$ is obtained from $\tau_n$ without extending the branch $V_n$, take $V_{n+1}=V_n$ and $\cA_{n+1}=\cA_n$.
+	\item If $\tau_{n+1}$ is obtained from $\tau_n$ by appending $T \varphi$ for some $\varphi \in T$ to the end of $V_n$, let $V_{n+1}$ be the branch $V_n$ with $T \varphi$ at the end and $\cA_{n+1} = \cA_n$. Since $\cA \vDash \varphi$, $\cA_{n+1}$ agrees with $V_{n+1}$.
+	\item Otherwise $\tau_{n+1}$ is obtained from $\tau_n$ by appending an atomic tableau for an entry $P$ on $V_n$ to $V_n$. By induction we know that $\cA$ agrees with $P$. If $P$ is formed by a logical connective, we take $\cA_{n+1}=\cA$ and verify that $V_n$ can always be extended to $V_{n+1}$ (this is the same as in propositional logic). If $P$ is in form $T(\forall x)\varphi(x)$, let $V_{n+1}$ be the unique extension of $V_n$ to a branch $\tau_{n+1}$ by the entry $T \varphi(x/t)$. Let $\cA_{n+1}$ be any expansion of $\cA_n$ by new constants from $t$. Since $\cA_n \vDash (\forall x) \varphi(x)$ also $\cA_{n+1} \vDash \varphi(x/t)$. Analogously for $P$ in form $F(\exists x) \varphi(x)$. Finally, if $P$ is in form $T(\exists x) \varphi(x)$, let $V_{n+1}$ be the unique extension of $V_n$ to a branch in $\tau_{n+1}$, i.e. by the entry $T \varphi(x/c)$. Since $\cA_n \vDash (\exists x) \varphi(x)$ there is some $a \in A$, such that $\cA \vDash \varphi(x)[e(x/a)]$ for every assignment $e$. Let $\cA_{n+1}$ be the expansion of $\cA_n$ by a new constant $c^A = a$. Then $\cA_{n+1} \vDash \varphi(x/c)$. Analogously for $P$ in form $F (\forall x)\varphi(x)$.
+\end{itemize}
+The base step for $n=0$ follows from the analysis of the atomic tableaux for the root entry $R$ applying the assumption that $\cA$ agrees with $R$.
+\end{proof}
+
+We can finally prove the soundness of the tableau method in first-order logic. The proof is in fact almost identical to the one in propositional logic. 
+
+\begin{theorem}
+For every theory $T$ and sentence $\varphi$, if $\varphi$ is tableau provable from $T$, then $\varphi$ is valid in $T$, i.e. $T \vdash \varphi \Rightarrow T \vDash \varphi$. 
+\end{theorem}
+\begin{proof}
+Let $\varphi$ be tableau provable from $T$, i.e. there is a contradictory tableau from $T$ with root entry $F \varphi$. Assume for contradiction that $\varphi$ is not valid in $T$, i.e. there is a model $\cA$ of $T$ in which $\varphi$ is not true. However, in such a case $\cA$ agrees with the root entry $F \varphi$ of the proof and therefore by previous lemma it can be expanded to the language $L_C$ so that it agrees with a branch in $\tau$. But all the branches in $\tau$ are contradictory, thus it is not possible.
+\end{proof}
+
+Now, we would like to prove the completeness of the tableau method in first-order logic. We will again use the branch in a non-contradictory tableau and a model that agrees with the branch in order to provide a counter-example. This time, the model will be so called canonical model. In the canonical model, the universe is formed by all the ground terms of the language and the representations of all function symbols is fixed. This means we can imagine the ground atomic formulas, informally, as complex names of propositional variables and therefore the proof of completeness in principle reduces to its equivalent in the propositional logic.
+
+Let $V$ be a noncontradictory branch of a finished tableau from a theory $T$ of a language $L = \struct{\cF, \cR}$. The \emph{canonical model} from $V$ is the $L_C$-structure $\cA = \struct{A, \cF^A, \cR^A}$ where $A$ is the set of all ground terms of the language $L_C$, $f^A(t_1, \dots, t_n) = f(t_1, \dots, t_n)$ for every $n$-ary function symbol $f \in \cF \cup (L_C \setminus L)$\sidenote{The expression $f(t_1, \dots, t_n)$ is a ground term of the language and therefore is in $A$.}, and $t_1, \dots, t_n \in A$, and $R^A(t_1, \dots, t_n) \Leftrightarrow TR(t_1, \dots, t_n)$ is an entry on $V$ for every $n$-ary relation symbol $R \in \cR$ and every $t_1, \dots, t_n \in A$.
+
+If $L$ is with equality, $T^*$ is an extension of $T$ by the axioms of equality for $L$. The equality will be interpreted in the model by some relation $=^A$. We also have $t_1 =^A t_2 \Leftrightarrow T(t_1 = t_2)$ is an entry of $V$. Since $V$ contains all axioms of equality (it is finished), the relation $=^A$ is a congruence for all functions and relations in $\cA$. If we require that the equality is represented by identity, we take the quotient of the canonical model $\cA$ by the congruence $=^A$. The \emph{canonical model with equality} from $V$ is the quotient $\quotient{\cA}{=^A}$. 
+
+\begin{lemma}
+The canonical model $\cA$ from a noncontradictory finished branch $V$ agrees with $V$.
+\end{lemma}
+\begin{proof}
+We will prove the lemma by induction on the structure of sentence $\varphi$ in an entry on $V$.
+\begin{itemize}
+	\item For atomic $\varphi$, if $T \varphi$ is on $V$ then $\cA \vDash \varphi$ by definition. If $F \varphi$ is on $V$, then $T \varphi$ is not on $V$ since $V$ is noncontradictory, so $\cA \vDash \neg \varphi$ by definition.
+  \item If $T(\varphi \land \psi)$ is on $V$, then $T \varphi$ and $T \psi$ are on $V$ since $V$ is finished. By induction $\cA \vDash \varphi$ and $\cA \vDash \psi$, thus $\cA \vDash \varphi \land \psi$. For other logical connectives similarly (this step is the same as in the proof in propositional logic).
+  \item If $T(\forall x) \varphi(x)$ is on $V$, then $T \varphi(x/t)$ is on $V$ for every term $t \in A$ since $V$ is finished. By induction $\cA \vDash \varphi(x/t)$ for every $t \in A$ and thus $\cA \vDash (\forall x) \varphi(x)$. Similarly for $F(\exists x) \varphi(x)$ on $V$.
+  \item Finally, if $T(\exists x)\varphi(x)$ is on $V$, then $T \varphi(x/c)$ is on $V$ for some $c \in A$. By induction, $\cA \vDash \varphi(x/c)$ and thus $\cA \vDash (\exists x)\varphi(x)$. Similarly for $F(\forall x) \varphi(x)$ on $V$. 
+\end{itemize}
+\vspace{-\baselineskip}
+\end{proof}
+
+We can finally prove the completeness of the tableau method. As always, the proof is very similar to the one in propositional logic.
+
+\begin{theorem}
+For every theory $T$ and sentence $\varphi$, if $\varphi$ is valid in $T$, then $\varphi$ is tableau provable from $T$, i.e. $T \vDash \varphi \Rightarrow T \vdash \varphi$.
+\end{theorem}
+\begin{proof}
+Let $\varphi$ is valid in $T$. We will show that an arbitrary finished tableau $\tau$ from a theory $T$ with the root entry $F \varphi$ is contradictory. Assume for a contradiction, that it is not, i.e. that there is a noncontradictory branch $V$ in $\tau$. By the previous lemma, there is a structure $\cA$ for $L_C$ that agrees with $V$, in particular with the root entry $F \varphi$, i.e. $\cA \vDash \neg \varphi$. Let $\cA'$ be the reduct of $\cA$ to the language $L$, then $\cA' \vDash \neg \varphi$. Since $V$ is finished, it contains $T \psi$ for every $\psi \in T$. Thus $\cA'$ is a model of $T$. But this contradicts the assumption that $\varphi$ is valid in $T$ ($\varphi$ is not valid in the model $\cA'$ of the theory $T$). Therefore the tableau $\tau$ is a proof of $\varphi$ from $T$.
+\end{proof}
+
+As with propositional logic, we can again re-define the semantical terms using syntactical notions. In fact, this and the next paragraph are copied from the propositional part with only minor changes. First of all, we define the \emph{set of theorems of $L$-theory $T$} $$\Thm^L(T) = \{\varphi | \varphi \in \Fm_L, T \vdash \varphi\}\,.$$ We say that a theory \emph{$T$ is inconsistent}, if $T \vdash \bot$, otherwise \emph{$T$ is consistent}. A theory \emph{$T$ is complete}, if it is consistent and every sentence is provable or refutable from $T$, i.e. if $T \vdash \neg \varphi$ or $T \vdash \varphi$. A theory $T$ in $L$ is \emph{an extension} of $T'$ in $L'$, if $L' \subseteq L$ and $\Thm^{L'}(T') \subseteq \Thm^{L}(T)$, the extension is \emph{simple}, if $L = L'$, and it is \emph{conservative} if $\Thm^{L'}(T') = \Thm^{L}(T) \cap \Fm_{L'}$. Two \emph{theories $T$ and $T'$ are equivalent}, if $T$ is an extension of $T'$ and vice versa.
+
+There are strong relations between the syntactic terms introduced above and the semantic terms introduced in the previous chapter. Most of these are corollaries of the soundness and completeness of tableau method. For each theory $T$ and sentences $\varphi, \psi$ of a language $L$ 
+\begin{enumerate}
+	\item $T \vdash \varphi$ if and only if $T \vDash \varphi\,,$
+	\item $\Thm^L(T) = \theta^L(T)\,,$
+	\item $T$ is inconsistent if and only if $T$ is unsatisfiable, i.e. it has no model,
+	\item $T$ is complete if and only if $T$ is semantically complete, i.e. it has a single model, up to elementary equivalence, and
+	\item (deduction theorem) $T \cup \{\varphi\} \vdash \psi$ if and only if $T \vdash \varphi \to \psi\,.$
+\end{enumerate}
+
+A corollary of the proofs is the weak version of the Lövenheim-Skolem theorem.
+
+\begin{theorem}
+Every consistent theory $T$ of a countable language $L$ without equality has a countably infinite model.
+\end{theorem}
+\begin{proof}
+Let $\tau$ be the systematic tableau from $T$ with $F\bot$ in the root. Since $\tau$ is consistent, $\bot$ is not provable from $T$ and therefore $\tau$ contains a noncontraditory branch $V$, and there exists a canonical model $\cA$ from $V$ (in language $L_C$). Since $\cA$ agrees with $V$ its reduct to the language $L$ is the desired countably infinite model of $T$.
+\end{proof}
+
+We needed the assumption that the theory is without equality because the canonical model with equality can be also finite (but it is always countable).
+
+As in propositional logic, we can also prove the compactness theorem in first-order logic.
+
+\begin{theorem}
+A theory $T$ has a model if and only if every finite subset of $T$ has a model.
+\end{theorem}
+\begin{proof}
+Let me know, what you tries and what was the outcome of your experiments.
+The implication from left to right is obvious. For the other implication, if $T$ has no model, then it is inconsistent, i.e. $\bot$ is provable by a systematic tableau $\tau$ from $T$. Since $\tau$ is finite, $\bot$ is provable from some finite $T' \subseteq T$, i.e. $T'$ has no model.
+\end{proof}
