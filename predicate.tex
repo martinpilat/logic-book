@@ -409,7 +409,7 @@ Compared to the propositional version of the tableau method, the definition of a
 
 We can now define the systematic tableau in predicate logic. The systematic tableau is again always finished and, moreover, if it is a proof, it is finite, as we shall see later. Let $R$ be an entry and $T=\{\varphi_0, \varphi_1, \dots\}$ a theory. The systematic tableau for $R$ from $T$ is the result $\tau = \cup \tau_n$ of the following construction:
 \begin{enumerate}
-  \item $t_0$ is the atomic tableau for $R$. In case $R$ is of the form $T(\exists x)\varphi(x)$ or $F(\forall x) \varphi(x)$ we take $c_0$ as the new constant. In case $R$ is of form $T(\forall x) \varphi(x)$ or $F(\exists x) \varphi(x)$ we take $t_1$ as the term.
+  \item $\tau_0$ is the atomic tableau for $R$. In case $R$ is of the form $T(\exists x)\varphi(x)$ or $F(\forall x) \varphi(x)$ we take $c_0$ as the new constant. In case $R$ is of form $T(\forall x) \varphi(x)$ or $F(\exists x) \varphi(x)$ we take $t_1$ as the term.
   \item Let $v$ be the leftmost node in the smallest level as possible in tableau $\tau_n$ containing an occurrence of an entry $P$ that is not reduced on some noncontradictory branch through $v$.
   \item If $P$ is neither $T(\forall x)\varphi(x)$ nor $F(\exists x)\varphi(x)$, let $\tau'_n$ be the tableau obtained from $\tau_n$ by adjoining the atomic tableau for $P$ to every noncontradictory branch through $v$. In case $P$ is in the form $T(\exists x)\varphi(x)$ or $F(\forall x) \varphi(x)$, we take $c_i$ as the new constant for lowest possible $i$.
   \item If $P$ is either $T(\forall x)\varphi(x)$ or $F(\exists x)\varphi(x)$ and it has the $i$-th occurrence in $v$, let $\tau'_n$ be the tableau obtained from $\tau_n$ by adjoining the atomic tableau for $P$ to every noncontradictory branch through $v$, where we take the term $t_i$ for $t$.
@@ -564,6 +564,6 @@ As in propositional logic, we can also prove the compactness theorem in first-or
 A theory $T$ has a model if and only if every finite subset of $T$ has a model.
 \end{theorem}
 \begin{proof}
-Let me know, what you tries and what was the outcome of your experiments.
 The implication from left to right is obvious. For the other implication, if $T$ has no model, then it is inconsistent, i.e. $\bot$ is provable by a systematic tableau $\tau$ from $T$. Since $\tau$ is finite, $\bot$ is provable from some finite $T' \subseteq T$, i.e. $T'$ has no model.
 \end{proof}
+
