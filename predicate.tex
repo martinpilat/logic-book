@@ -593,6 +593,8 @@ Let $L'$ be an extension of $L$ with a new $n$-ary function symbol $f$. The \emp
 
 The two previous paragraphs show that if we have a theory $T'$ of the language $L'$ which was obtained from $T$ of $L$ by successive definitions of relation and function symbols (\emph{extension of $T$ by definitions}) then every model of $T$ can be uniquely expanded into a model of $T'$, $T'$ is a conservative extension of $T$, and for every formula $\varphi'$ of $L'$ there is a formula $\varphi$ of $L$ such that $T' \vDash \varphi' \lequiv \varphi$.
 
+\chapter{Resolution in First-Order Logic}
+
 We now aim to introduce the resolution method in predicate logic. To this end, we will need to show that the problem of satisfiability of theories can be reduced to open theories. We will show that every theory has an open conservative extension and therefore the satisfiability of the theory can be expressed as the satisfiability of the open extension. 
 
 We say that two \emph{theories $T$ and $T'$ are equisatisfiable} it $T$ has a model if and only if $T'$ has a model. A formula is in the prenex (normal) form (PNF) if it is written as $(Q_1 x_1)\dots(Q_n x_n)\varphi'$, where $Q_i$ denotes $\forall$ or $\exists$ and $\varphi'$ is an open formula called the \emph{matrix}. $(Q_1 x_1)\dots(Q_n x_n)$ is the \emph{prenex}. If all the quantifiers are $\forall$ then $\varphi$ is a \emph{universal formula}.
@@ -674,3 +676,65 @@ The Herbrand model also works in languages $L$ with equality, we just need to ta
 A corollary of the Herbrand's theorem is that an open theory $T$ of a language $L$ with at least one constant symbol is satisfiable if and only if the theory $T'$ of all ground instances of axioms of $T$ is satisfiable. Why? If $T$ has a model $\cA$, every instance of each axiom of $T$ is valid in $\cA$, and thus $\cA$ is also a model of $T'$. If $T$ is unsatisfiable then by Herbrand theorem there are finitely ground instances of axioms of $T$ that are not satisfiable and therefore $T'$ is also unsatisfiable.
 
 Another corollary says that for every open $\varphi(x_1, \dots, x_n)$ of a language $L$ with at least one constant symbol, the formula $(\exists x_1)\dots(\exists x_n)\varphi$ is valid if and only if there exist $mn$ ground terms $t_{ij}$ of $L$ for some $m$ such that $\varphi(x_1/t_{11}, \dots, x_n/t_{1n}) \lor \dots \lor \varphi(x_1/t_{m1}, \dots, x_n/t_{mn})$ is a tautology. We know that $(\exists x_1)\dots(\exists x_n)\varphi$ is valid if and only if its negation $(\forall x_1)\dots(\forall x_n)(\neg\varphi)$ is unsatisfiable, which is equivalent to $\neg \varphi$ being unsatisfiable. The Herbrand theorem for $\{\neg \varphi\}$ gives us finitely many ($m$) ground instances of $\{\neg \varphi\}$ such that their conjunction $\psi$ is unsatisfiable. The negation of $\psi$ is the desired tautology.
+
+We will now discuss the resolution method in predicate logic. It is again a refutation procedure, i.e. it aims to show that a formula or theory are not satisfiable. It assumes the formulas are open and in CNF. These are then represented in the clausal form as in propositional logic. Now, \emph{literals} are atomic formulas and their negations, \emph{a clause} is a finite set of literals ($\square$ denotes the empty clause) and a \emph{formula in clausal form} is a set of clauses. The resolution rule in first-order logic is based on the rule in propositional logic, but is more general -- it allows to resolve through literals that are different, if they are unifiable (i.e. if there is such a substitution that they become identical). Resolution in first-order logic is thus based on the resolution in propositional logic and unification.
+
+The Herbrand's theorem actually gives us an (ineffective) way, how to perform the resolution in first-order logic. If we have an input formula $S$ in clausal form and we assume the language has at least one constant symbol, we can create the set $S'$ of all ground instances of all clauses in $S$. If we know consider the atomic sentences as names of propositional variables, we may view $S'$ as a propositional formula in clausal form. We may now verify that it is unsatisfiable using the propositional version of the resolution method. While this method in principle works, it is very inefficient, as we need to work with large numbers of ground instances. Therefore, instead of grounding, we use suitable substitutions in order to perform the resolution on as general clauses as possible.
+
+A \emph{substitution} is a finite set $\sigma = \{x_1/t_1, \dots, x_n/t_n\}$, where $x_i, i \leq n$ are distinct variables, $t_i$ are terms and the term $t_i$ is not $x_i$. If all $t_i$ are ground terms, $\sigma$ is a \emph{ground substitution}, if $t_i$ are distinct variables, $\sigma$ is a \emph{renaming of variables}. An \emph{instance of an expression $E$ by substitution $\sigma = \{x_1/t_1, \dots, x_n/t_n\}$} is the expression $E \sigma$ obtained from $E$ by simultaneously replacing all occurrences of $x_i$ by $t_i$. For a set $S$ of expressions, let $S \sigma = \{E \sigma| E \in S\}$. For two substitutions $\sigma = \{x_1/t_1, \dots, x_n/t_n\}$ and $\tau = \{y_1/s_1, \dots, y_m/s_m\}$ we define the \emph{composition of $\sigma$ and $\tau$} as $\sigma \tau = \{x_1/t_1 \tau| x_i \in X, t_i \tau\text{ is not }x_i\} \cup \{y_j/s_j|y_j \in X \setminus Y\}\,$ where $X = \{x_1, \dots, x_n\}$ and $Y = \{y_1, \dots, y_m\}$. For every expression $E$ and substitutions $\sigma, \tau, \rho$ it holds (without proof) that $(E \sigma)\tau = E(\sigma \tau)$ and $(\sigma \tau)\rho = \sigma(\tau \rho)$.
+
+A unification is a special substitution. Let $S = \{E_1, \dots, E_n\}$ be a finite set of expressions. A \emph{unification for $S$} is a substitution $\sigma$ such that $E_1 \sigma = E_2 \sigma = \dots = E_N \sigma$, i.e. $S \sigma$ is a singleton. We say that \emph{$S$ is unifiable}, if $S$ has a unification. A unification $\sigma$ of $S$ is a \emph{most general unification (mgu)} if for a every unification $\tau$ of $S$ there is a substitution $\lambda$ such that $\tau = \sigma \lambda$. Obviously, if $\sigma$ and $\tau$ are two different most general unifications of $S$, they differ only in renaming of variables.
+
+The general resolution rule in first-order logic is then defined in the following way: let $C_1, C_2$ be clauses with distinct variables such that $C_1 = C'_1 \sqcup \{A_1, \dots, A_n\}$ and $C_2 = C'_2 \sqcup \{\neg B_1, \dots, \neg B_m\}$, let $\sigma$ be a most general unifier of $S = \{A_1, \dots, A_n, B_1, \dots, B_m\}$. The \emph{resolvent} of $C_1$ and $C_2$ is $C = C'_1 \sigma \cup C'_2 \sigma$.
+
+For example, in clauses $\{P(x), Q(x,z)\}$ and $\{\neg P(y), \neg Q(f(y), y)\}$ we can unify $S = \{Q(x,z), Q(f(y),y)\}$ applying the most general unification $\sigma = \{x/f(y), z/y\}$ and resolve to a clause $\{P(f(y)), \neg P(y)\}$.
+
+The resolution proof and related notions are they defined in almost the same way as in propositional logic. Resolution proof (deduction) of a clause $C$ from a formula $S$ is a finite sequence $C_0, \dots, C_n = C$, such that for every $i \leq n$, we have $C_i = C'_i \sigma$ form some $C'_i \in S$ and a renaming of variables $\sigma$, or $C_i$ is a resolvent of some previous clauses. A clause $C$ is (resolution) provable from $S$ ($S \vdash_R C$), if it has a resolution proof from $S$. A refutation of a formula $S$ is a resolution proof of $\square$ from $S$. $S$ is resolution refutable if $S \vdash_R \square$.
+
+It remains to show how to find the most general unifications we need in the resolution method. There is in fact a simple algorithm to find them: let $S$ be a finite set of expressions and $p$ be the leftmost position in which some expressions of $S$ differ. Then the difference in $S$ is the set $D(S)$ of subexpressions of all expressions of $S$ starting at the position $p$. For example $S = \{P(x,y), P((f(x), z), P(z, f(x)\}$ has $D(S) = \{x, f(x), z\}$.
+
+The input of the algorithm is a nonempty finite set of expressions $S$, its output is the most general unification $\sigma$ of $S$ or information that $S$ is not unifiable. The algorithm performs the steps bellow:
+\begin{enumerate}
+	\item Let $S_0 \gets S, \sigma_0 \gets \emptyset, k \gets 0$.
+	\item If $S_k$ is a singleton, output the substitution $\sigma = \sigma_0 \sigma_1 \dots \sigma_k$.
+	\item If $D(S_k)$ contains a variable $x$ and a term $t$ with no occurrence of $x$, let $\sigma_{k+1} \gets \{x/t\}, S_{k+1} \gets S_k \sigma_{k+1}, k \gets k+1$ and go to step 2.
+	\item Otherwise output ``S is not unifiable''.
+\end{enumerate}
+
+The occurrence check in step 3 can be expensive and slows the algorithm down significantly. Therefore some implementations (e.g. those in most Prolog interpreters) ignore that. However, it can lead to infinite loops.
+
+We now show the correctness of the unification algorithm -- the unification algorithm outputs a correct answer in finite time for any input $S$, i.e. a most general unification $\sigma$ of $S$ or it detects that $S$ is not unifiable. The algorithm eliminates one variable in each iteration, therefore it finishes in finite time. If it ends negatively after $k$ iterations, $D(S_k)$ is not unifiable and therefore also $S$ is not. If it outputs $\sigma = \sigma_0 \sigma_1 \dots \sigma_k$, clearly $\sigma$ is a unification of $S$. We only need to show it is a most general one, i.e. for every unification $\tau$ of $S$ there is a substitution $\lambda$ such that $\tau = \sigma \lambda$. We will show that in this case, $\lambda = \tau$ and therefore $\tau = \sigma \tau$ (this property will also be important in the proof of lifting lemma later, let us call this property (*)). Let $\tau$ be a unification of $S$, we will show that $\tau = \sigma_0 \sigma_1 \dots \sigma_i \tau$ for every $i \leq k$. It obviously holds for $k = 0$. Let $\sigma_{i+1} = \{x/t\}$ and assume $\tau = \sigma_0 \sigma_1 \dots \sigma_i \tau$. It suffices to show that $v \sigma_{i+1} \tau = v \tau$ for every variable $\tau$. If $v \neq x$, $v \sigma_{i+1} = v$ and it holds. Otherwise $v = x$ and $v \sigma_{i+1} = x \sigma_{i+1} = t$. Since $\tau$ unifies $S_i=S \sigma_0 \sigma_1 \dots \sigma_i$ and both the variable $x$ and term $t$ are in $D(S_i)$ (otherwise $\sigma_{i+1}$ would be different), $\tau$ has to unify $x$ and $t$, i.e. $t \tau = x \tau$ as required.
+
+In order to show the soundness of the resolution method, we first show the soundness of the general resolution rule.
+
+\begin{lemma}
+Let $C$ be a resolvent of clauses $C_1$ and $C_2$. For every $L$-structure $\cA$, if $\cA \vDash C_1$ and $\cA \vDash C_2$, then $\cA \vDash C$. 
+\end{lemma}
+\begin{proof}
+Let $C_1 = C'_1 \sqcup \{A_1, \dots, A_n\}$ and $C_2 = C'_2 \sqcup \{\neg B_1, \dots, \neg B_m\}$, let $\sigma$ be a most general unifier of $S = \{A_1, \dots, A_n, B_1, \dots, B_m\}$, and let $C = C'_1 \sigma \cup C'_2 \sigma$. Since $C_1, C_2$ are open, also $\cA \vDash C_1 \sigma$ and $\cA \vDash C_2 \sigma$. We have $C_1 \sigma = C'_1 \sigma \cup \{S \sigma\}$ and $C_2 \sigma = C'_2 \cup \{\neg (S \sigma)\}$. We show $\cA \vDash C[e]$ for every assignment $e$. If $\cA \vDash S \sigma[e]$, then $\cA \vDash C'_2 \sigma[e]$, and thus $\cA \vDash C[e]$, otherwise $\cA \nvDash S \sigma [e]$, so $\cA \vDash C'_1 \sigma[e]$ and thus $\cA \vDash C[e]$.
+\end{proof}
+
+\begin{theorem}[soundness of resolution]
+If $S$ is resolution refutable, then $S$ is unsatisfiable.
+\end{theorem}
+\begin{proof}
+Let $S \vdash_R \square$. Suppose $\cA \vDash S$ for some structure $\cA$. By soundness of general resolution rule we also have $\cA \vDash \square$, which is not possible.
+\end{proof}
+
+The proof of completeness of resolution in predicate logic is based on its completeness in propositional logic. The connection between the propositional and predicate levels is given by the lifting lemma.
+
+\begin{lemma}[lifting]
+Let $C^*_1 = C_1 \tau_1$ and $C^*_2 = C_2 \tau_2$ be ground instances of clauses $C_1$ and $C_2$ with distinct variables and let $C^*$ be a resolvent of $C^*_1$ and $C^*_2$. Then there exists a resolvent $C$ of $C_1$ and $C_2$ such that $C^* = C \tau_1 \tau_2$ is a ground instance of $C$.
+\end{lemma}
+\begin{proof}
+Assume $C^*$ is a resolvent of $C^*_1$ and $C^*_2$ through some literal $P(t_1, \dots, t_k)$. We show that the resolution step provides the desired $C$. We have $C_1 = C'_1 \sqcup \{A_1, \dots, A_n\}$ and $C_2 = C'_2 \sqcup \{\neg B_1, \dots, \neg B_m\}$, where $\{A_1, \dots, A_n\}\tau_1 = \{P(t_1, \dots, t_k\}$ and also $\{\neg B_1, \dots, \neg B_m\}\tau_2 = \{\neg P(t_1, \dots, t_k)\}$. Thus $(\tau_1 \tau_2)$ unifies $S = \{A_1, \dots, A_n, B_1, \dots B_m\}$ and if $\sigma$ is a most general unification of $S$ from the unification algorithm, then $C = C'_1 \sigma \cup C'_2 \sigma$ is a resolvent of $C_1, C_2$. We know (by the property (*)) that $(\tau_1 \tau_2) = \sigma(\tau_1 \tau_2)$ and hence $C \tau_1 \tau_2 = (C'_1 \sigma \cup C'_2 \sigma)\tau_1 \tau_2 = C'_1 \sigma \tau_1 \tau_2 \cup C'_2 \sigma \tau_1 \tau_2 = C'_1 \tau_1 \cup C'_2 \tau_2 = (C_1 \setminus \{A_1, \dots, A_n\})\tau_1 \cup (C_2 \setminus \{\neg B_1, \dots, \neg B_m\})\tau_2 = (C^*_1 \setminus \{P(t_1, \dots, t_k\}) \cup (C^*_2 \setminus \{\neg P(t_1, \dots, t_k)\}) = C^*$. 
+\end{proof}
+
+We can now easily show by the induction on the length of the resolution proof for a set $S'$ of all ground instances of clauses of a formula $S$, the if $S' \vdash_R C'$ (on propositional level) where $C'$ is a ground clause, then $C' = C \sigma$ for some clause $C$ and a ground substitution $\sigma$ such that $S \vdash_R C$ (on predicate level). This leads to the completeness of the resolution method.
+
+\begin{theorem}[completeness of resolution]
+If $S$ is unsatisfiable, then $S \vdash_R \square$.
+\end{theorem}
+\begin{proof}
+If $S$ is unsatisfiable that by the corollary of Herbrand's theorem also the set $S'$ of all ground clauses is unsatisfiable. By completeness of resolution in propositional logic, $S' \vdash_R \square$. By the above paragraph, there is a clause $C$ and a ground substitution $\sigma$ such that $\square = C \sigma$ and $S \vdash_R C$. But the only clause that has $\square$ as a ground instance is the clause $C = \square$.
+\end{proof}
