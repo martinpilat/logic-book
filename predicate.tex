@@ -601,6 +601,8 @@ We say that two \emph{theories $T$ and $T'$ are equisatisfiable} it $T$ has a mo
 
 We obtain the equisatisfiable open theory $T'$ by first transforming all axioms of $T$ into the prenex form. Then we remove the existential quantifiers (we will create so called Skolem variant of the formula) thus obtaining a universal formula. The matrices of the universal formulas will be the axioms of $T'$.
 
+\section{Prenex Normal Form}
+
 We start by the transformation of formulas into the prenex normal form. The transformation is based on replacing some occurrences of a sub-formula $\psi$ in a formula $\varphi$ by an equivalent sub-formula $\psi'$. It is easy to show (by induction on the structure of formula $\varphi$) that the obtained formula is equivalent to $\varphi$.
 
 Let $Q$ denote $\forall$ or $\exists$ and $\bar{Q}$ denote the complementary quantifier. For every formulas $\varphi$ and $\psi$ such that $x$ is not free in the formula $\psi$, the following equivalences (\emph{conversion rules}) hold:
@@ -615,6 +617,8 @@ Let $Q$ denote $\forall$ or $\exists$ and $\bar{Q}$ denote the complementary qua
 All the equivalences can be proved by the tableau method. The assumption that $x$ is not free in $\psi$ is necessary in each rule above. 
 
 By induction on the structure of formula $\varphi$, we can show that for every formula $\varphi$ there is an equivalent formula $\varphi'$ in the prenex normal form, i.e. $\vDash \varphi \lequiv \varphi'$. We just apply the conversion rules above (and replace subformulas with suitable variants if needed). 
+
+\section{Skolem Variant}
 
 If the prenex of the formula contains only universal quantifiers ($\forall$), we can remove them, thus obtaining an equivalent (and therefore also equisatisfiable) open formula. However, in many cases, some of the quantifiers will be existential. In such a cases we can use the so called Skolem variant as the equisatisfiable formula.
 
@@ -654,6 +658,8 @@ Every theory $T$ has an open conservative extension $T^*$.
 We assume $T$ is in closed form (otherwise we can take the universal closures of all the axioms of $T$), and let $L$ be its language. We first replace each axiom of $T$ by an equivalent formula in prenex normal form, thus obtaining theory $T^\circ$. Next, we replace each axiom in $T^\circ$ by its Skolem variant, which gives us a theory $T'$ in a language $L' \supseteq L$. Since every reduct of every model of $T'$ to $L$ is a model of $T$, $T'$ is an extension of $T$. Furthermore, every model of $T$ can be expanded to a model of $T'$ and therefore $T'$ is a conservative extension of $T$. Every axiom of $T'$ is a universal sentence, therefore we can take the matrices of these sentences to obtain an open theory $T^\circ$ equivalent to $T'$. $T^\circ$ is the open conservative extension of $T$.
 \end{proof}
 
+\section{Herbrand Model}
+
 We can even reduce the problem of satisfiability to propositional logic and show that if an open theory is unsatisfiable, we can demonstrate it via ground terms. For example, in the language $L = \struct{P, R, f, c}$ the theory $T=\{P(x,y) \lor R(x,y), \neg P(c,y), \neg R(x, f(x))\}$ is unsatisfiable because the following conjunction of finitely many ground instances of axioms of $T$ is unsatisfiable: $$P(c, f(c)) \lor R(c, f(c)) \land \neg P(c, f(c)) \land \neg R(c, f(c))\,.$$ This can also be seen as a unsatisfiable propositional formula $(p \lor r) \land \neg p \land \neg r$.
 
 A \emph{ground instance} of formula $\varphi$ with free variables $x_1, \dots, x_n$ is $\varphi(x_1/t_1, \dots, x_n/t_n)$ where $t_1, \dots, t_n$ are ground terms.
@@ -678,6 +684,8 @@ A corollary of the Herbrand's theorem is that an open theory $T$ of a language $
 Another corollary says that for every open $\varphi(x_1, \dots, x_n)$ of a language $L$ with at least one constant symbol, the formula $(\exists x_1)\dots(\exists x_n)\varphi$ is valid if and only if there exist $mn$ ground terms $t_{ij}$ of $L$ for some $m$ such that $\varphi(x_1/t_{11}, \dots, x_n/t_{1n}) \lor \dots \lor \varphi(x_1/t_{m1}, \dots, x_n/t_{mn})$ is a tautology. We know that $(\exists x_1)\dots(\exists x_n)\varphi$ is valid if and only if its negation $(\forall x_1)\dots(\forall x_n)(\neg\varphi)$ is unsatisfiable, which is equivalent to $\neg \varphi$ being unsatisfiable. The Herbrand theorem for $\{\neg \varphi\}$ gives us finitely many ($m$) ground instances of $\{\neg \varphi\}$ such that their conjunction $\psi$ is unsatisfiable. The negation of $\psi$ is the desired tautology.
 
 We will now discuss the resolution method in predicate logic. It is again a refutation procedure, i.e. it aims to show that a formula or theory are not satisfiable. It assumes the formulas are open and in CNF. These are then represented in the clausal form as in propositional logic. Now, \emph{literals} are atomic formulas and their negations, \emph{a clause} is a finite set of literals ($\square$ denotes the empty clause) and a \emph{formula in clausal form} is a set of clauses. The resolution rule in first-order logic is based on the rule in propositional logic, but is more general -- it allows to resolve through literals that are different, if they are unifiable (i.e. if there is such a substitution that they become identical). Resolution in first-order logic is thus based on the resolution in propositional logic and unification.
+
+\section{Resolution}
 
 The Herbrand's theorem actually gives us an (ineffective) way, how to perform the resolution in first-order logic. If we have an input formula $S$ in clausal form and we assume the language has at least one constant symbol, we can create the set $S'$ of all ground instances of all clauses in $S$. If we know consider the atomic sentences as names of propositional variables, we may view $S'$ as a propositional formula in clausal form. We may now verify that it is unsatisfiable using the propositional version of the resolution method. While this method in principle works, it is very inefficient, as we need to work with large numbers of ground instances. Therefore, instead of grounding, we use suitable substitutions in order to perform the resolution on as general clauses as possible.
 
@@ -704,6 +712,8 @@ The input of the algorithm is a nonempty finite set of expressions $S$, its outp
 The occurrence check in step 3 can be expensive and slows the algorithm down significantly. Therefore some implementations (e.g. those in most Prolog interpreters) ignore that. However, it can lead to infinite loops.
 
 We now show the correctness of the unification algorithm -- the unification algorithm outputs a correct answer in finite time for any input $S$, i.e. a most general unification $\sigma$ of $S$ or it detects that $S$ is not unifiable. The algorithm eliminates one variable in each iteration, therefore it finishes in finite time. If it ends negatively after $k$ iterations, $D(S_k)$ is not unifiable and therefore also $S$ is not. If it outputs $\sigma = \sigma_0 \sigma_1 \dots \sigma_k$, clearly $\sigma$ is a unification of $S$. We only need to show it is a most general one, i.e. for every unification $\tau$ of $S$ there is a substitution $\lambda$ such that $\tau = \sigma \lambda$. We will show that in this case, $\lambda = \tau$ and therefore $\tau = \sigma \tau$ (this property will also be important in the proof of lifting lemma later, let us call this property (*)). Let $\tau$ be a unification of $S$, we will show that $\tau = \sigma_0 \sigma_1 \dots \sigma_i \tau$ for every $i \leq k$. It obviously holds for $k = 0$. Let $\sigma_{i+1} = \{x/t\}$ and assume $\tau = \sigma_0 \sigma_1 \dots \sigma_i \tau$. It suffices to show that $v \sigma_{i+1} \tau = v \tau$ for every variable $\tau$. If $v \neq x$, $v \sigma_{i+1} = v$ and it holds. Otherwise $v = x$ and $v \sigma_{i+1} = x \sigma_{i+1} = t$. Since $\tau$ unifies $S_i=S \sigma_0 \sigma_1 \dots \sigma_i$ and both the variable $x$ and term $t$ are in $D(S_i)$ (otherwise $\sigma_{i+1}$ would be different), $\tau$ has to unify $x$ and $t$, i.e. $t \tau = x \tau$ as required.
+
+\section{Soundness and Completeness}
 
 In order to show the soundness of the resolution method, we first show the soundness of the general resolution rule.
 
@@ -738,3 +748,9 @@ If $S$ is unsatisfiable, then $S \vdash_R \square$.
 \begin{proof}
 If $S$ is unsatisfiable that by the corollary of Herbrand's theorem also the set $S'$ of all ground clauses is unsatisfiable. By completeness of resolution in propositional logic, $S' \vdash_R \square$. By the above paragraph, there is a clause $C$ and a ground substitution $\sigma$ such that $\square = C \sigma$ and $S \vdash_R C$. But the only clause that has $\square$ as a ground instance is the clause $C = \square$.
 \end{proof}
+
+\bigskip
+
+This concludes the part of the lecture dedicated to the predicate logic. We closely followed the previous part on propositional logic and extended the ideas to the first-order logic. The differences are mostly given by the more expressive language of predicate logic. We again started the discussion with syntax and semantics, we saw that models in first order logic are structures. Then, we showed two formal proof methods -- tableau method and resolution. 
+
+In the next (and last) part, we will first discuss the basics of model theory and then we will show the limits of the formal systems.
