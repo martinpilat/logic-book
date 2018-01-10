@@ -97,6 +97,15 @@ Let $L$ be at most countable language.
 Every model of $T$ is elementarily equivalent with some countably infinite model of $T$, but such model is unique up to isomorphism, therefore all models of $T$ are elementarily equivalent and $T$ is complete.
 \end{proof}
 
+The fact that isomorphisms preserve semantics also gives us a simple condition for sets that can be defined in structures. The set defined by a formula $\varphi(\bar{x}, \bar{y})$ in structure $\mathcal{A}$ from parameters $\bar{b}\in \mathcal{A}^{|\bar{b}|}$ is $\varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y}) = \{\bar{a} \in \mathcal{A}^{|\bar{x}|} | \mathcal{A} \vDash \varphi[e(\bar{x}/\bar{a}, \bar{y}/\bar{b}\}$. A set $D \subseteq \mathcal{A}^n$ is definable in the structure $\mathcal{A}$ from parameters $\bar{b} \in \mathcal{A}^{|\bar{y}|}$ if there is a formula $\varphi(\bar{x}, \bar{y})$, such that $D = \varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y})$. It is easy to show, that definable sets map to themselves in automorphism. 
+
+\begin{lemma}
+Let $D \subseteq A^n$ is a set definable in the structure $\mathcal{A}$ from parameters $\bar{b}$ and $h$ is an automorphism on $\mathcal{A}$ identical on $\bar{b}$. Then $h[D] = D$.
+\end{lemma}
+\begin{proof}
+Let $D = \varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y})$, then for every $\bar{a} \in A^n$ we have $\bar{a} \in D \Leftrightarrow A \vDash \varphi[e(\bar{x}/\bar{a}, \bar{y}/\bar{b})] \Leftrightarrow \varphi[e \circ h(\bar{x}/\bar{a}, \bar{y}/\bar{b})] \Leftrightarrow \varphi[e(\bar{x}/h(\bar{a}), \bar{y}/h(\bar{b}))] \Leftrightarrow \varphi[e(\bar{x}/h(\bar{a}), \bar{y}/\bar{b})] \Leftrightarrow h(\bar{a}) \in D$.
+\end{proof}
+
 \section{Decidability}
 
 Now, we would like to know if a given problem is algorithmically decidable (e.g. if a sentence is provable in a theory). We can formally define the notion of algorithm, for example using Turing machines. Decision problems can then be encoded into sets of natural numbers corresponding to the positive instances (with answer ``yes''). For example, $SAT = \{\lceil \varphi \rceil | \varphi \text{ is a satisfiable formula }\}$, where $\lceil \varphi \rceil$ is the natural number representing the formula $\varphi$. We say that a set \emph{$A \subseteq \Nat$ is recursive}, if there is an algorithm that for every input $x \in \Nat$ halts (stops) and correctly tells whether or not $x \in A$. We say that such algorithm \emph{decides $x \in A$}. We say that a \emph{set $A \subseteq \Nat$ is recursively enumerable} if there is an algorithm that for every input $x \in \Nat$ halts if and only if $x \in A$. We say that such algorithm \emph{recognizes $x \in A$}. Equivalently, $A$ is recursively enumerable if there is an algorithm that generates (enumerates) all elements of $A$. 
@@ -116,7 +125,7 @@ For every theory $T$ of $L$ with recursively enumerable axioms, $\Thm(T)$ is rec
 
 If the theory $T$ from the previous paragraph is additionally complete, then $\Thm(T)$ is recursive, i.e. $T$ is decidable. Similarly to the proof of the lemma above, we can start the construction of systematic tableaux from $T$ with roots $F \varphi$ and $T \varphi$. Since $T$ is complete, then $T \nvdash \varphi$ if and only if $T \vdash \neg \varphi$ for every sentence $\varphi$. The construction thus provides an algorithm that decides $T \vdash \varphi$.
 
-We now know that complete theories (with recursively enumerable axioms) are decidable, however, completeness is a rather strong assumption. In fact, it is enough, if all the simple complete extensions of a theory $T$ are recursively enumerable, i.e.. if there is an algorithm $\alpha(i,j)$ that generates the $i$-th axiom of th $j$-th extension (in some enumeration) or announces that such axiom does not exist.
+We now know that complete theories (with recursively enumerable axioms) are decidable, however, completeness is a rather strong assumption. In fact, it is enough, if all the simple complete extensions of a theory $T$ are recursively enumerable, i.e. if there is an algorithm $\alpha(i,j)$ that generates the $i$-th axiom of th $j$-th extension (in some enumeration) or announces that such axiom does not exist.
 
 So, if a theory $T$ has recursively enumerable axioms and the set of all simple complete extensions of $T$ is recursively enumerable, then $T$ is decidable. By the previous observation there is an algorithm that recognizes $T \vdash \varphi$ (the construction of systematic tableau). On the other hand, if $T \nvdash \varphi$ then $T' \vdash \neg \varphi$ for some simple complete extension $T'$ of $T$. We can construct the systematic tableaux with root $T \varphi$ from all the extensions in parallel. In the $i$-th step we construct tableaux up to level $i$ for the first $i$ extensions. One of these tableaux is eventually a proof of $T' \vdash \neg \varphi$ and therefore this construction recognizes $T \nvdash \varphi$. Therefore, $T$ is decidable.
 
@@ -149,7 +158,18 @@ By the previous observation, for all the above structures $\cA$, the theory $\Th
 
 Apart from the recursive axiomatizability, we may also be interested if a class of structures can be axiomatized by theories with other properties. For example, a \emph{class $K \subseteq M(L)$ is openly axiomatizable}, if there is an open theory $T$, such that $M(T) = K$. A \emph{theory is openly axiomatizable}, if $M(T)$ is openly axiomatizable. We already know that if $T$ is openly axiomatizable then every substructure of its model is also its model. The other implication also holds and gives a useful criterium to test if a theory is openly axiomatizable. For example, the $DeLO$ theory is not openly axiomatizable, because a finite substructure of its model is not its model.
 
-Another interesting case is finite axiomatizability. A class of structures \emph{$K \subseteq M(L)$ is finitely axiomatizable}, if there is a finite theory $T$ such that $M(T) = K$. Similarly, \emph{a theory $T$ is finitely axiomatizable}, if $M(T)$ is finitely axiomatizable. 
+Another interesting case is finite axiomatizability. A class of structures \emph{$K \subseteq M(L)$ is finitely axiomatizable}, if there is a finite theory $T$ such that $M(T) = K$. Similarly, \emph{a theory $T$ is finitely axiomatizable}, if $M(T)$ is finitely axiomatizable. We again have a criterium to test if a class is finitely axiomatizable.
+
+\begin{theorem}
+Let $K \subseteq M(L), \bar{K} = M(L) \setminus K$, where $L$ is a language. Then $K$ is finitely axiomatizable, if and only if both $K$ and $\bar{K}$ are axiomatizable.
+\end{theorem}
+\begin{proof}
+($\Rightarrow$) If $T$ is a finite axiomatization of $K$ then the theory with a single sentence $\Lor_{\varphi \in T} \neg \varphi$ axiomatizes $K$.
+
+($\Leftarrow$) Let $T, S$ are theories of $L$ such that $M(T) = K, M(S) = \bar{K}$. Then $M(S \cup T) = M(T) \cap M(S) = \emptyset$, by compactness, there are finite theories $T' \subseteq T$ and $S' \subseteq S$ such that $M(S' \cup T') = \emptyset$. Then $M(T) \subseteq M(T') \subseteq \overline{M(S')} \subseteq \overline{M(S)}=M(T)$ and therefore $M(T) = M(T')$.
+\end{proof}
+
+
 
 There are actually classes of structures that are not axiomatizable at all. The compactness theorem gives us the following lemma:
 
