@@ -25,7 +25,7 @@ Formulas are thus strings created from propositional variables, logical connecti
 
 The formal definition of formula dictates the use of parentheses around every sub-formula, which can be rather cumbersome. Therefore, we define priorities of the logical connectives and can thus omit some of the parentheses. The standard priorities are such, that the negation ($\neg$) has the highest priority (therefore parentheses around $(\neg \varphi)$ can always be omitted), conjunction and disjunction ($\lor, \land$) have ``middle'' priority, and implication and equivalence ($\to, \lequiv$) have the lowest priority. Therefore, we can write $\varphi \land \psi \to \neg \varphi \lor \xi$ instead of $((\varphi \land \psi) \to ((\neg \varphi) \lor \xi))$. 
 
-Each formula can be also represented by a so called \emph{formation tree}, which is a finite ordered tree, whose nodes are labeled with propositions -- the leaves are labeled with propositional variables, if a node has label $(\neg \varphi)$, it has a single son labeled with $\varphi$, and if a node has label $(\varphi \to \psi), (\varphi \land \psi), (\varphi \lor \psi),$ or $(\varphi \lequiv \psi)$, it has two sons, the left one has label $\varphi$, and the right one has label $\psi$. For example, a formula $p \land q \to \neg (p \lor s)$ is represented by the formation tree on the left.
+Each formula can be also represented by a so called \emph{formation tree}, which is a finite ordered tree, whose nodes are labeled with propositions -- the leaves are labeled with propositional variables, if a node has label $(\neg \varphi)$, it has a single son labeled with $\varphi$, and if a node has label $(\varphi \to \psi), (\varphi \land \psi), (\varphi \lor \psi),$ or $(\varphi \lequiv \psi)$, it has two sons, the left one has label $\varphi$, and the right one has label $\psi$. For example, a formula $p \land q \to \neg (p \lor s)$ is represented by the formation tree on the right.
 \begin{marginfigure}[-4\baselineskip]
 \centering
 \begin{tikzpicture}[sibling distance=4em, level distance=3em]
@@ -46,7 +46,7 @@ It is simple to show (by the induction on the number of nested parentheses) that
 
 \section{Semantics of Propositional Logic}
 
-Once we have the formal definition of the formula (the syntax of propositional logic), we can define its semantics (what the formula means). The propositional variables represent atomic statements, that can have one of two truth values -- either 0 (false) or 1 (true). The truth value of the whole proposition in then given by the truth values of the variables and by the semantics of the logical connectives, which is given in Table~\ref{tab:prop_semantics} bellow.
+Once we have the formal definition of the formula (the syntax of propositional logic), we can define its semantics (what the formula means). The propositional variables represent atomic statements, that can have one of two truth values -- either 0 (false) or 1 (true). The truth value of the whole proposition is then given by the truth values of the variables and by the semantics of the logical connectives, which is given in Table~\ref{tab:prop_semantics} bellow.
 
 \begin{table}[h]
 \centering
@@ -64,7 +64,7 @@ $p$ & $q$ & $\neg p$ & $p \lor q$ & $p \land q$ & $p \to q$ & $p \lequiv q$ \\
 \end{tabular}
 \end{table}
 
-We can also consider the table above a definition of Boolean functions $\lor_1, \land_1, \to_1, \lequiv_1,$ and $-_1$, that implement the logical connectives. We will use these functions in cases where it is needed (e.g. while talking about truth values of propositions). More generally, any propositional formula with $n$ variables defines a Boolean function $f: \{0,1\}^n \to \{0,1\}$ (later, we will also see that any Boolean function can be expressed using a propositional formula).
+We can also consider the table above as a definition of Boolean functions $\lor_1, \land_1, \to_1, \lequiv_1,$ and $-_1$, that implement the logical connectives. We will use these functions in cases where it is needed (e.g. while talking about truth values of propositions). More generally, any propositional formula with $n$ variables defines a Boolean function $f: \{0,1\}^n \to \{0,1\}$ (later, we will also see that any Boolean function can be expressed using a propositional formula).
 
 We also define two special logical formulas. The formula $\top \equiv p \lor \neg p$, which is always true, and the formula $\bot \equiv p \land \neg p$ which is always false.
 
