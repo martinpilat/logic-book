@@ -184,7 +184,7 @@ For example, the theory of orderings $T$ is a theory in language $L=\struct{\leq
 
 The models of $T$ (ordered sets) are structures $\struct{S, \leq_S}$. For example $\mathcal{A} = \struct{\Nat, \leq}$ or $\mathcal{B} = \struct{\mathcal{P}(X), \subseteq}$ for a set $X = \{0,1,2\}$. The formula $\varphi \equiv x \leq y \lor y \leq x$ is valid in $\cA$, but not in $\mathcal{B}$, as $\mathcal{B} \nvDash \varphi[e]$ for $e(x) = \{0\}$ and $e(y)=\{1\}$, therefore it is independent in $T$. The sentence $\psi \equiv (\exists x)(\forall y)(y \leq x)$ is valid in $\mathcal{B}$ and contradictory in $\cA$, and therefore also independent in $T$. Finally, the formula $\chi \equiv (x \leq y \land y \leq z \land z \leq x) \to (x = y \land y = z)$ is valid in $T$, denoted as $T \vDash \chi$.
 
-We say that a theory $T$ in a language $L$ is \emph{semantically inconsistent} if $T \vDash \bot$, otherwise \emph{$T$ is consistent}. The theory \emph{$T$ is complete}, if it is consistent, and every sequence of $L$ is either valid or contradictory in $T$. The $L$-theory \emph{$T$ is an extension} of another theory $T'$ in language $L'$ if $L' \subseteq L$ and $\theta^{L'}(T') \subseteq \theta^L(T)$. The \emph{extension is simple}, if $L' = L$ and it is \emph{conservative} if $\theta^{L'}(T') = \theta^L(T) \cap \Fm_L$. The \emph{two theories are equivalent}, if one is the extension of the other and vice versa.
+We say that a theory $T$ in a language $L$ is \emph{semantically inconsistent} if $T \vDash \bot$, otherwise \emph{$T$ is consistent}. The theory \emph{$T$ is complete}, if it is consistent, and every sentence of $L$ is either valid or contradictory in $T$. The $L$-theory \emph{$T$ is an extension} of another theory $T'$ in language $L'$ if $L' \subseteq L$ and $\theta^{L'}(T') \subseteq \theta^L(T)$. The \emph{extension is simple}, if $L' = L$ and it is \emph{conservative} if $\theta^{L'}(T') = \theta^L(T) \cap \Fm_{L'}$. The \emph{two theories are equivalent}, if one is the extension of the other and vice versa.
 
 We also define a form of equivalence for two structures -- we say that two $L$-structures $\cA, \cB$ are \emph{elementarily equivalent}, denoted as $\mathcal{A} \equiv \mathcal{B}$ if they satisfy the same sentences of $L$. It means that we cannot write a sentence in the language that would make any distinction between the two structures. Later, we will also define the isomorphism of structures and we will see that it is a stronger property, i.e. that any two isomorphic structures are elementarily equivalent, but not vice versa.
 
@@ -574,7 +574,7 @@ In mathematics, we very often define new functions or relations using formulas f
 \begin{lemma}
 Let $T$ be a theory of $L$ and $T'$ a theory of $L'$ where $L \subseteq L'$.
 \begin{enumerate}
-	\item $T'$ is an extension of $T$ if and only if the reduct $\cA$ of every model $\cA'$ of $T'$ to the language $L$ is a model of $T'$,
+	\item $T'$ is an extension of $T$ if and only if the reduct $\cA$ of every model $\cA'$ of $T'$ to the language $L$ is a model of $T$,
 	\item $T'$ is a conservative extension of $T$, if $T'$ is an extension of $T$ and every model $\cA$ of $T$ can be expanded to the language $L'$ on a model $\cA'$ of $T'$.
 \end{enumerate}
 \end{lemma}
@@ -611,7 +611,7 @@ Let $Q$ denote $\forall$ or $\exists$ and $\bar{Q}$ denote the complementary qua
 ((Qx)\varphi \land \psi) & \lequiv (Qx)(\varphi \land \psi) \\
 ((Qx)\varphi \lor \psi) & \lequiv (Qx)(\varphi \lor \psi) \\
 ((Qx)\varphi \to \psi) & \lequiv (\bar{Q}x)(\varphi \to \psi) \\
-(\psi \to (Qx) \varphi) & \lequiv (Qx)(\varphi \to \psi)
+(\psi \to (Qx) \varphi) & \lequiv (Qx)(\psi \to \varphi)
 \end{align*}
 
 All the equivalences can be proved by the tableau method. The assumption that $x$ is not free in $\psi$ is necessary in each rule above. 
@@ -620,7 +620,7 @@ By induction on the structure of formula $\varphi$, we can show that for every f
 
 \section{Skolem Variant}
 
-If the prenex of the formula contains only universal quantifiers ($\forall$), we can remove them, thus obtaining an equivalent (and therefore also equisatisfiable) open formula. However, in many cases, some of the quantifiers will be existential. In such a cases we can use the so called Skolem variant as the equisatisfiable formula.
+If the prenex of the formula contains only universal quantifiers ($\forall$), we can remove them, thus obtaining an equivalent (and therefore also equisatisfiable) open formula. However, in many cases, some of the quantifiers will be existential. In such cases we can use the so called Skolem variant as the equisatisfiable formula.
 
 Let $\varphi$ be a sentence of a language $L$ in the prenex normal form, let $y_1, \dots, y_n$ be the existentially quantified variables in $\varphi$ (in this order), and for every $i \leq n$ let $x_1, \dots, x_{n_i}$ be the universally quantified variables in $\varphi$ before $y_i$. Let $L'$ be an extension of $L$ with new $n_i$-ary function symbols $f_i$ for all $i \leq n$. Let $\varphi_S$ denote the formula obtained from $\varphi$ by removing all the $(\exists y_i)$ and replacing each occurrence of $y_i$ by $f_i(x_1, \dots, x_{n_i})$. Then $\varphi_S$ is the \emph{Skolem variant} of $\varphi$.
 
@@ -634,7 +634,7 @@ We will now prove, that the Skolem variant $\varphi_S$ of $\varphi$ is equisatis
 Let $\varphi$ be a sentence $(\forall x_1)\dots(\forall x_n)(\exists y)\psi$ of $L$ and $\varphi'$ be a sentence $(\forall x_1)\dots(\forall x_n)\psi(y/f(x_1, \dots, x_n))$ where $f$ is a new function symbol. Then
 \begin{enumerate}
 	\item the reduct $\cA$ of every model $\cA'$ of $\varphi'$ to the language $L$ is a model of $\varphi$, and
-	\item every model of $\varphi$ can be expanded onto a model $\cA'$ of $\varphi'$.
+	\item every model of $\varphi$ can be expanded into a model $\cA'$ of $\varphi'$.
 \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -691,13 +691,13 @@ The Herbrand's theorem actually gives us an (ineffective) way, how to perform th
 
 A \emph{substitution} is a finite set $\sigma = \{x_1/t_1, \dots, x_n/t_n\}$, where $x_i, i \leq n$ are distinct variables, $t_i$ are terms and the term $t_i$ is not $x_i$. If all $t_i$ are ground terms, $\sigma$ is a \emph{ground substitution}, if $t_i$ are distinct variables, $\sigma$ is a \emph{renaming of variables}. An \emph{instance of an expression $E$ by substitution $\sigma = \{x_1/t_1, \dots, x_n/t_n\}$} is the expression $E \sigma$ obtained from $E$ by simultaneously replacing all occurrences of $x_i$ by $t_i$. For a set $S$ of expressions, let $S \sigma = \{E \sigma| E \in S\}$. For two substitutions $\sigma = \{x_1/t_1, \dots, x_n/t_n\}$ and $\tau = \{y_1/s_1, \dots, y_m/s_m\}$ we define the \emph{composition of $\sigma$ and $\tau$} as $\sigma \tau = \{x_i/t_i \tau| x_i \in X, t_i \tau\text{ is not }x_i\} \cup \{y_j/s_j|y_j \in Y \setminus X\}\,$ where $X = \{x_1, \dots, x_n\}$ and $Y = \{y_1, \dots, y_m\}$. For every expression $E$ and substitutions $\sigma, \tau, \rho$ it holds (without proof) that $(E \sigma)\tau = E(\sigma \tau)$ and $(\sigma \tau)\rho = \sigma(\tau \rho)$.
 
-A unification is a special substitution. Let $S = \{E_1, \dots, E_n\}$ be a finite set of expressions. A \emph{unification for $S$} is a substitution $\sigma$ such that $E_1 \sigma = E_2 \sigma = \dots = E_n \sigma$, i.e. $S \sigma$ is a singleton. We say that \emph{$S$ is unifiable}, if $S$ has a unification. A unification $\sigma$ of $S$ is a \emph{most general unification (mgu)} if for a every unification $\tau$ of $S$ there is a substitution $\lambda$ such that $\tau = \sigma \lambda$. Obviously, if $\sigma$ and $\tau$ are two different most general unifications of $S$, they differ only in renaming of variables.
+A unification is a special substitution. Let $S = \{E_1, \dots, E_n\}$ be a finite set of expressions. A \emph{unification for $S$} is a substitution $\sigma$ such that $E_1 \sigma = E_2 \sigma = \dots = E_n \sigma$, i.e. $S \sigma$ is a singleton. We say that \emph{$S$ is unifiable}, if $S$ has a unification. A unification $\sigma$ of $S$ is a \emph{most general unification (mgu)} if for every unification $\tau$ of $S$ there is a substitution $\lambda$ such that $\tau = \sigma \lambda$. Obviously, if $\sigma$ and $\tau$ are two different most general unifications of $S$, they differ only in renaming of variables.
 
 The general resolution rule in first-order logic is then defined in the following way: let $C_1, C_2$ be clauses with distinct variables such that $C_1 = C'_1 \sqcup \{A_1, \dots, A_n\}$ and $C_2 = C'_2 \sqcup \{\neg B_1, \dots, \neg B_m\}$, let $\sigma$ be a most general unifier of $S = \{A_1, \dots, A_n, B_1, \dots, B_m\}$. The \emph{resolvent} of $C_1$ and $C_2$ is $C = C'_1 \sigma \cup C'_2 \sigma$.
 
 For example, in clauses $\{P(x), Q(x,z)\}$ and $\{\neg P(y), \neg Q(f(y), y)\}$ we can unify $S = \{Q(x,z), Q(f(y),y)\}$ applying the most general unification $\sigma = \{x/f(y), z/y\}$ and resolve to a clause $\{P(f(y)), \neg P(y)\}$.
 
-The resolution proof and related notions are they defined in almost the same way as in propositional logic. Resolution proof (deduction) of a clause $C$ from a formula $S$ is a finite sequence $C_0, \dots, C_n = C$, such that for every $i \leq n$, we have $C_i = C'_i \sigma$ form some $C'_i \in S$ and a renaming of variables $\sigma$, or $C_i$ is a resolvent of some previous clauses. A clause $C$ is (resolution) provable from $S$ ($S \vdash_R C$), if it has a resolution proof from $S$. A refutation of a formula $S$ is a resolution proof of $\square$ from $S$. $S$ is resolution refutable if $S \vdash_R \square$.
+The resolution proof and related notions are then defined in almost the same way as in propositional logic. Resolution proof (deduction) of a clause $C$ from a formula $S$ is a finite sequence $C_0, \dots, C_n = C$, such that for every $i \leq n$, we have $C_i = C'_i \sigma$ form some $C'_i \in S$ and a renaming of variables $\sigma$, or $C_i$ is a resolvent of some previous clauses. A clause $C$ is (resolution) provable from $S$ ($S \vdash_R C$), if it has a resolution proof from $S$. A refutation of a formula $S$ is a resolution proof of $\square$ from $S$. $S$ is resolution refutable if $S \vdash_R \square$.
 
 It remains to show how to find the most general unifications we need in the resolution method. There is in fact a simple algorithm to find them: let $S$ be a finite set of expressions and $p$ be the leftmost position in which some expressions of $S$ differ. Then the difference in $S$ is the set $D(S)$ of subexpressions of all expressions of $S$ starting at the position $p$. For example $S = \{P(x,y), P((f(x), z), P(z, f(x)\}$ has $D(S) = \{x, f(x), z\}$.
 
