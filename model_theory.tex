@@ -97,7 +97,7 @@ Let $L$ be a finite or countably infinite language.
 Every model of $T$ is elementarily equivalent with some countably infinite model of $T$, but such model is unique up to isomorphism, therefore all models of $T$ are elementarily equivalent and $T$ is complete.
 \end{proof}
 
-The fact that isomorphisms preserve semantics also gives us a simple condition for sets that can be defined in structures. The set defined by a formula $\varphi(\bar{x}, \bar{y})$ in structure $\mathcal{A}$ from parameters $\bar{b}\in \mathcal{A}^{|\bar{b}|}$ is $\varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y}) = \{\bar{a} \in \mathcal{A}^{|\bar{x}|} | \mathcal{A} \vDash \varphi[e(\bar{x}/\bar{a}, \bar{y}/\bar{b}\}$. A set $D \subseteq \mathcal{A}^n$ is definable in the structure $\mathcal{A}$ from parameters $\bar{b} \in \mathcal{A}^{|\bar{y}|}$ if there is a formula $\varphi(\bar{x}, \bar{y})$ such that $D = \varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y})$. It is easy to show that definable sets map to themselves in automorphism. 
+The fact that isomorphisms preserve semantics also gives us a simple condition for sets that can be defined in structures. The set defined by a formula $\varphi(\bar{x}, \bar{y})$ in structure $\mathcal{A}$ from parameters $\bar{b}\in \mathcal{A}^{|\bar{b}|}$ is $\varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y}) = \{\bar{a} \in \mathcal{A}^{|\bar{x}|} | \mathcal{A} \vDash \varphi[e(\bar{x}/\bar{a}, \bar{y}/\bar{b})]\}$. A set $D \subseteq \mathcal{A}^n$ is definable in the structure $\mathcal{A}$ from parameters $\bar{b} \in \mathcal{A}^{|\bar{y}|}$ if there is a formula $\varphi(\bar{x}, \bar{y})$ such that $D = \varphi^{\mathcal{A}, \bar{b}}(\bar{x}, \bar{y})$. It is easy to show that definable sets map to themselves in automorphism. 
 
 \begin{lemma}
 Let $D \subseteq A^n$ is a set definable in the structure $\mathcal{A}$ from parameters $\bar{b}$ and $h$ is an automorphism on $\mathcal{A}$ identical on $\bar{b}$. Then $h[D] = D$.
@@ -125,7 +125,7 @@ For every theory $T$ of $L$ with recursively enumerable axioms, $\Thm(T)$ is rec
 
 If the theory $T$ from the previous paragraph is additionally complete, then $\Thm(T)$ is recursive, i.e. $T$ is decidable. Similarly to the proof of the lemma above, we can start the construction of systematic tableaux from $T$ with roots $F \varphi$ and $T \varphi$. Since $T$ is complete, then $T \nvdash \varphi$ if and only if $T \vdash \neg \varphi$ for every sentence $\varphi$. The construction thus provides an algorithm that decides $T \vdash \varphi$.
 
-We now know that complete theories (with recursively enumerable axioms) are decidable, however, completeness is a rather strong assumption. In fact, it is enough, if all the simple complete extensions of a theory $T$ are recursively enumerable, i.e. if there is an algorithm $\alpha(i,j)$ that generates the $i$-th axiom of th $j$-th extension (in some enumeration) or announces that such an axiom does not exist.
+We now know that complete theories (with recursively enumerable axioms) are decidable, however, completeness is a rather strong assumption. In fact, it is enough, if all the simple complete extensions of a theory $T$ are recursively enumerable, i.e. if there is an algorithm $\alpha(i,j)$ that generates the $i$-th axiom of the $j$-th extension (in some enumeration) or announces that such an axiom does not exist.
 
 So, if a theory $T$ has recursively enumerable axioms and the set of all simple complete extensions of $T$ is recursively enumerable, then $T$ is decidable. By the previous observation there is an algorithm that recognizes $T \vdash \varphi$ (the construction of systematic tableau). On the other hand, if $T \nvdash \varphi$ then $T' \vdash \neg \varphi$ for some simple complete extension $T'$ of $T$. We can construct the systematic tableaux with root $T \varphi$ from all the extensions in parallel. In the $i$-th step we construct tableaux up to level $i$ for the first $i$ extensions. One of these tableaux is eventually a proof of $T' \vdash \neg \varphi$ and therefore this construction recognizes $T \nvdash \varphi$. Therefore, $T$ is decidable.
 
@@ -150,7 +150,7 @@ For example the following structures $\cA$ have recursively axiomatizable $\Th(\
   \item $\struct{\Int, \leq}$ by the theory of discrete linear orderings, 
   \item $\struct{\Rat, \leq}$ by the theory of dense linear ordering without ends ($DeLO$),
   \item $\struct{\Nat, S, 0}$ by the theory of successor with zero, 
-  \item $\struct{\Nat, S, +, 0}$ by so called Presburger arithmetic, 
+  \item $\struct{\Nat, S, +, 0}$ by so-called Presburger arithmetic, 
   \item $\struct{\Real, +, -, \cdot, 0, 1}$ by the theory of real closed fields, and 
   \item $\struct{\mathbb{C}, +, -, \cdot, 0, 1}$ by the theory of algebraically closed fields with characteristic 0.
 \end{enumerate}
@@ -195,7 +195,7 @@ We will start by introducing a first approximation of $\Th(\UNat)$. So-called \e
   \item $x + S(y) = S(x+y)$
   \columnbreak
   \item $x \cdot 0 = 0$
-  \item $x \cdot S(x) = x \cdot y + x$
+  \item $x \cdot S(y) = x \cdot y + x$
   \item $x \neq 0 \to (\exists y)(x = S(y))$
   \item $x \leq y \lequiv (\exists z)(z +x = y)$
 \end{enumerate}
