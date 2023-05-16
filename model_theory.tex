@@ -244,7 +244,7 @@ Assume for contradiction that there is a formula $\tau(x)$ that defines truth in
 We can finally prove Gödel's first incompleteness theorem, which shows that whatever we do, there is not a consistent recursively axiomatizable extension of Robinson arithmetic that is equivalent to $\Th(\UNat)$.
 
 \begin{theorem}[Gödel's First Incompleteness Theorem]
-For every consistent axiomatizable extension $T$ of Robinson arithmetic there is a sentence true in $\UNat$ and unprovable in $T$.
+For every consistent recursively axiomatizable extension $T$ of Robinson arithmetic there is a sentence true in $\UNat$ and unprovable in $T$.
 \end{theorem}
 \begin{proof}
 Let $\varphi(x)$ be $\neg (\exists y)Prf_T(x, y)$, i.e. it says $x$ is not provable in $T$. By the fixed point theorem there is a sentence $\psi_T$ such that $T \vdash \psi_T \lequiv \neg (\exists y)Prf_T(\underline{\psi_T}, y)$. Such a $\psi_T$ is equivalent to a formula that expresses that $\psi_T$ is not provable in $T$, and the equivalence holds both in $T$ and $\UNat$. 
